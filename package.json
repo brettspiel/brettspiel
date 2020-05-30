@@ -1,0 +1,8 @@
+{
+  "name": "brettspiel",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": ["workspaces/*"],
+  "author": "airtoxin",
+  "license": "MIT"
+}

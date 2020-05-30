@@ -1,0 +1,17 @@
+{
+  "name": "@brettspiel/backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "tsc-watch --onSuccess 'node build'",
+    "build": "tsc",
+    "format": "prettier --write --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "typescript": "3.9.3"
+  },
+  "devDependencies": {
+    "prettier": "2.0.5",
+    "tsc-watch": "4.2.8"
+  }
+}
