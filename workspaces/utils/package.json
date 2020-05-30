@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "tsc-watch --onSuccess 'node build'",
+    "start": "tsc --watch",
     "build": "tsc",
     "format": "prettier --write --ignore-path .gitignore"
   },
@@ -11,7 +11,6 @@
     "typescript": "3.9.3"
   },
   "devDependencies": {
-    "prettier": "2.0.5",
-    "tsc-watch": "4.2.8"
+    "prettier": "2.0.5"
   }
 }
