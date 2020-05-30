@@ -1,27 +1,24 @@
 import { useDispatch } from "react-redux";
 import { useReduxState } from "./useReduxState";
 import { useCallback } from "react";
-import { registerId, unregisterId } from "../modules/server";
-import { getServerAddress } from "../utils/serverAddress";
+import { registerAddress, unregisterAddress } from "../modules/server";
 
 export const useServerConnection = () => {
   const dispatch = useDispatch();
-  const serverId = useReduxState((state) => state.server.serverId);
-  const serverAddress = serverId && getServerAddress(serverId);
+  const serverAddress = useReduxState((state) => state.server.serverAddress);
 
   const connect = useCallback(async () => {
-    const serverId = window.prompt("server id");
-    if (!serverId) throw new Error("server id not found");
-    dispatch(registerId(serverId));
-    return serverId;
+    const serverAddress = window.prompt("server address");
+    if (!serverAddress) throw new Error("server address not found");
+    dispatch(registerAddress(serverAddress));
+    return serverAddress;
   }, [dispatch]);
 
   const disconnect = useCallback(async () => {
-    dispatch(unregisterId());
+    dispatch(unregisterAddress());
   }, [dispatch]);
 
   return {
-    serverId,
     serverAddress,
     connect,
     disconnect,

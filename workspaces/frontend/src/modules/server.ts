@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type ServerState = {
-  serverId?: string;
+  serverAddress?: string;
 };
 
 const initialState: ServerState = {};
@@ -10,14 +10,14 @@ const slice = createSlice({
   name: "server",
   initialState,
   reducers: {
-    registerId: (state, action: PayloadAction<string>) => {
-      state.serverId = action.payload;
+    registerAddress: (state, action: PayloadAction<string>) => {
+      state.serverAddress = action.payload;
     },
-    unregisterId: (state) => {
-      delete state.serverId;
+    unregisterAddress: (state) => {
+      delete state.serverAddress;
     },
   },
 });
 
-export const { registerId, unregisterId } = slice.actions;
+export const { registerAddress, unregisterAddress } = slice.actions;
 export const server = slice.reducer;

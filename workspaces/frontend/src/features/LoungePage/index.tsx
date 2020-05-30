@@ -10,7 +10,7 @@ import { addLog } from "../../modules/loungeChatLog";
 import { LoungePageSendChatWorkflow } from "../../debug/LoungePageSendChatWorkflow";
 
 export const LoungePage: React.FunctionComponent = () => {
-  const { self, serverId, serverAddress } = useLoggedInEffect();
+  const { self, serverAddress } = useLoggedInEffect();
   const dispatch = useDispatch();
   const chatLogs = useReduxState((state) => state.loungeChatLog.logs);
   const [chatMessage, setChatMessage] = useState("");
@@ -42,8 +42,6 @@ export const LoungePage: React.FunctionComponent = () => {
 
   return (
     <div className={styles.lounge}>
-      <Header as="h1">サーバーID: {serverId}</Header>
-
       <Header as="h3">ゲームを始める</Header>
       <Segment>
         <div>マルバツゲーム</div>

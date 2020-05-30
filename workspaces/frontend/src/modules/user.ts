@@ -3,7 +3,6 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UsersApi } from "../api/UsersApi";
 import { UserCreateRequest } from "../types/io/UserCreateRequest";
 import { ReduxState } from "../store";
-import { getServerAddress } from "../utils/serverAddress";
 
 export type UserState = {
   self?: User;
@@ -24,11 +23,11 @@ const slice = createSlice({
 export const createUser = createAsyncThunk(
   "user/createUser",
   (name: string, thunkApi) => {
-    const serverId = (thunkApi.getState() as ReduxState).server.serverId;
-    if (!serverId) throw new Error("serverId not found");
+    const serverAddress = (thunkApi.getState() as ReduxState).server
+      .serverAddress;
+    if (!serverAddress) throw new Error("serverAddress not found");
     const req = UserCreateRequest.decode({ name });
     if (req.isLeft()) throw new Error(JSON.stringify(req));
-    const serverAddress = getServerAddress(serverId);
 
     return new UsersApi(serverAddress)
       .create(req.unsafeCoerce())

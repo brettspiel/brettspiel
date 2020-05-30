@@ -1,5 +1,5 @@
 import { store } from "../store";
-import { registerId } from "../modules/server";
+import { registerAddress } from "../modules/server";
 import { createUser } from "../modules/user";
 import { paths } from "../paths";
 import { DEBUG_MODE } from "../constants";
@@ -11,10 +11,10 @@ export class TitleMenuPageToLoungePageWorkflow {
   run = async () => {
     if (!DEBUG_MODE) return;
 
-    const serverId = window.prompt("server id");
-    if (!serverId) return;
+    const serverAddress = window.prompt("server address");
+    if (!serverAddress) return;
 
-    await this.dispatch(registerId(serverId));
+    await this.dispatch(registerAddress(serverAddress));
     await this.dispatch(createUser("BotUser"));
     history.push(paths["/lounge"].routingPath);
   };

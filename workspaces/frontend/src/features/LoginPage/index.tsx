@@ -8,8 +8,8 @@ import { useServerConnection } from "../../hooks/useServerConnection";
 
 export const LoginPage: React.FunctionComponent = () => {
   const history = useHistory();
-  const { serverId, serverAddress } = useServerConnection();
-  if (!serverId || !serverAddress) {
+  const { serverAddress } = useServerConnection();
+  if (!serverAddress) {
     history.push(paths["/"].routingPath);
   }
 

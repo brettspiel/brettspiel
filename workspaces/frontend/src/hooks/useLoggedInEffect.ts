@@ -6,14 +6,13 @@ import { User } from "../types/domain/User";
 
 export const useLoggedInEffect = (): {
   self: User;
-  serverId: string;
   serverAddress: string;
 } => {
   const history = useHistory();
-  const { serverId, serverAddress } = useServerConnection();
+  const { serverAddress } = useServerConnection();
   const self = useReduxState((state) => state.user.self);
 
-  if (!serverId || !serverAddress) {
+  if (!serverAddress) {
     history.push(paths["/"].routingPath);
   }
   if (!self) {
@@ -22,7 +21,6 @@ export const useLoggedInEffect = (): {
 
   return {
     self: self!,
-    serverId: serverId!,
     serverAddress: serverAddress!,
   };
 };
