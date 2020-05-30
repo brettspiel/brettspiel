@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noImplicitAny": true,
-    "outDir": "build",
+    "outDir": "lib",
     "rootDir": "src",
     "declaration": true
   },

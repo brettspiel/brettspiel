@@ -1,3 +1,21 @@
-export const greeter = () => console.log("Hello world");
+import { assertUnreachable } from "@brettspiel/utils/lib/language";
 
-greeter();
+type AB = "A" | "B";
+
+export const greeter = (ab: AB) => {
+  switch (ab) {
+    case "A": {
+      console.log("Hello world");
+      break;
+    }
+    case "B": {
+      console.log("Hello world");
+      break;
+    }
+    default: {
+      assertUnreachable(ab);
+    }
+  }
+};
+
+greeter("A");

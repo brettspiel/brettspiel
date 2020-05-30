@@ -1,5 +1,5 @@
 {
-  "name": "@brettspiel/backend",
+  "name": "@brettspiel/utils",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,6 @@
     "format": "prettier --write --ignore-path .gitignore"
   },
   "dependencies": {
-    "@brettspiel/utils": "0.1.0",
     "typescript": "3.9.3"
   },
   "devDependencies": {
