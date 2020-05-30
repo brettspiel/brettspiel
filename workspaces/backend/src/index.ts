@@ -1,21 +1,11 @@
-import { assertUnreachable } from "@brettspiel/utils/lib/language";
+import { Launcher } from "./Launcher";
+import { server } from "./app";
+import portfinder from "portfinder";
 
-type AB = "A" | "B";
-
-export const greeter = (ab: AB) => {
-  switch (ab) {
-    case "A": {
-      console.log("Hello world");
-      break;
-    }
-    case "B": {
-      console.log("Hello world");
-      break;
-    }
-    default: {
-      assertUnreachable(ab);
-    }
-  }
-};
-
-greeter("A");
+portfinder
+  .getPortPromise()
+  .then((port) => new Launcher(server).launch(port))
+  .then((serverUrl) => {
+    console.log(`Server launched at ${serverUrl}`);
+  })
+  .catch(console.error);
