@@ -2,7 +2,16 @@
   "name": "brettspiel",
   "version": "0.0.1",
   "private": true,
-  "workspaces": ["workspaces/*"],
+  "workspaces": [
+    "workspaces/*"
+  ],
   "author": "airtoxin",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "wsrun -c start",
+    "build": "wsrun -c build"
+  },
+  "dependencies": {
+    "wsrun": "5.2.0"
+  }
 }

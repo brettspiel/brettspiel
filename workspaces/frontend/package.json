@@ -2,6 +2,12 @@
   "name": "@brettspiel/frontend",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "format": "prettier --write --ignore-path .gitignore"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -15,12 +21,8 @@
     "react-scripts": "3.4.1",
     "typescript": "3.9.3"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "format": "prettier --write --ignore-path .gitignore"
+  "devDependencies": {
+    "prettier": "2.0.5"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -36,8 +38,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "prettier": "2.0.5"
   }
 }
