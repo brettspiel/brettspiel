@@ -12,11 +12,8 @@ export const useLoggedInEffect = (): {
   const { serverAddress } = useServerConnection();
   const self = useReduxState((state) => state.user.self);
 
-  if (!serverAddress) {
+  if (!serverAddress || !self) {
     history.push(paths["/"].routingPath);
-  }
-  if (!self) {
-    history.push(paths["/login"].routingPath);
   }
 
   return {

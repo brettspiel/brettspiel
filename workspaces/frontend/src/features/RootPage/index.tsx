@@ -7,6 +7,7 @@ import { TitleMenuPageToLoungePageWorkflow } from "../../debug/TitleMenuPageToLo
 import { Button, Input } from "semantic-ui-react";
 import { healthcheck } from "../../api/healthcheck";
 import { registerAddress } from "../../modules/server";
+import { createUser } from "../../modules/user";
 
 export const RootPage: React.FunctionComponent = () => {
   useEffect(() => {
@@ -14,30 +15,37 @@ export const RootPage: React.FunctionComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [serverAddress, setServerAddress] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const [serverAddress, setServerAddress] = useState("");
+  const [userName, setUserName] = useState("");
 
   const handleClickClient = useCallback(async () => {
     const ok = await healthcheck(serverAddress!);
     if (ok) {
       dispatch(registerAddress(serverAddress));
-      history.push(paths["/login"].routingPath);
+      await dispatch(createUser(userName));
+      history.push(paths["/lounge"].routingPath);
     }
-  }, [dispatch, history, serverAddress]);
+  }, [dispatch, history, serverAddress, userName]);
 
   return (
     <div className={styles.container}>
       <div className={styles.box}>
         <Input
-          ref={(ref) => ref && ref.focus()}
           type="text"
           label="サーバーアドレス"
           placeholder="https://xxxxxxx.ngrok.io"
           value={serverAddress}
           onChange={(event) => setServerAddress(event.target.value)}
         />
-        <Button onClick={handleClickClient}>接続</Button>
+        <Input
+          label="ユーザー名"
+          value={userName}
+          onChange={(event) => setUserName(event.target.value)}
+        />
+        <Button onClick={handleClickClient}>ログイン</Button>
       </div>
     </div>
   );

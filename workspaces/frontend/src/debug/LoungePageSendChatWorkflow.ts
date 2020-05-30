@@ -3,7 +3,6 @@ import { store } from "../store";
 import { useSocket } from "../hooks/useSocket";
 
 export class LoungePageSendChatWorkflow {
-  private dispatch = store.dispatch;
   constructor(private emit: ReturnType<typeof useSocket>["emit"]) {}
 
   run = async () => {
