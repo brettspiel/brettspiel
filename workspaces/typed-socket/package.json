@@ -1,0 +1,16 @@
+{
+  "name": "@brettspiel/typed-socket",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "tsc --watch",
+    "build": "tsc",
+    "format": "prettier --write --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "typescript": "3.9.3"
+  },
+  "devDependencies": {
+    "prettier": "2.0.5"
+  }
+}
