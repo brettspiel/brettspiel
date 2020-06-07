@@ -1,52 +1,91 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.css";
+import { Button, Input, Comment, Header, Segment } from "semantic-ui-react";
+import { useSocket } from "../../hooks/useSocket";
+import { ChatLog } from "../../types/domain/ChatLog";
+import { useLoggedInEffect } from "../../hooks/useLoggedInEffect";
+import { useReduxState } from "../../hooks/useReduxState";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router";
-import { paths } from "../../paths";
-import { TitleMenuPageToLoungePageWorkflow } from "../../debug/TitleMenuPageToLoungePageWorkflow";
-import { Button, Input } from "semantic-ui-react";
-import { healthcheck } from "../../api/healthcheck";
-import { registerAddress } from "../../modules/server";
-import { createUser } from "../../modules/user";
+import { addLog } from "../../modules/loungeChatLog";
+import { LoungePageSendChatWorkflow } from "../../debug/LoungePageSendChatWorkflow";
 
 export const RootPage: React.FunctionComponent = () => {
+  const { self, serverAddress } = useLoggedInEffect();
+  const dispatch = useDispatch();
+  const chatLogs = useReduxState((state) => state.loungeChatLog.logs);
+  const [chatMessage, setChatMessage] = useState("");
+  const { connect, disconnect, emit, subscribe, unsubscribe } = useSocket(
+    serverAddress,
+    "/lounge"
+  );
   useEffect(() => {
-    new TitleMenuPageToLoungePageWorkflow().run();
+    new LoungePageSendChatWorkflow(emit).run();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const dispatch = useDispatch();
-  const history = useHistory();
+  const chatLogSubscriber = useCallback(
+    (chatLog: ChatLog) => {
+      dispatch(addLog(chatLog));
+    },
+    [dispatch]
+  );
+  useEffect(() => {
+    connect();
+    subscribe("server/lounge/chatLog", chatLogSubscriber);
 
-  const [serverAddress, setServerAddress] = useState("");
-  const [userName, setUserName] = useState("");
-
-  const handleClickClient = useCallback(async () => {
-    const ok = await healthcheck(serverAddress!);
-    if (ok) {
-      dispatch(registerAddress(serverAddress));
-      await dispatch(createUser(userName));
-      history.push(paths["/lounge"].routingPath);
-    }
-  }, [dispatch, history, serverAddress, userName]);
+    return () => {
+      unsubscribe("server/lounge/chatLog", chatLogSubscriber);
+      disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.box}>
-        <Input
-          type="text"
-          label="サーバーアドレス"
-          placeholder="https://xxxxxxx.ngrok.io"
-          value={serverAddress}
-          onChange={(event) => setServerAddress(event.target.value)}
-        />
-        <Input
-          label="ユーザー名"
-          value={userName}
-          onChange={(event) => setUserName(event.target.value)}
-        />
-        <Button onClick={handleClickClient}>ログイン</Button>
-      </div>
+    <div className={styles.lounge}>
+      <Header as="h3">ゲームを始める</Header>
+      <Segment>
+        <div>マルバツゲーム</div>
+      </Segment>
+
+      <Comment.Group>
+        <Header as="h3" dividing>
+          チャット
+        </Header>
+
+        {chatLogs.map((chatLog) => (
+          <Comment key={`${chatLog.timestamp}_${chatLog.user.id}`}>
+            <Comment.Content>
+              <Comment.Author as="span">{chatLog.user.name}</Comment.Author>
+              <Comment.Metadata>
+                <span>
+                  {new Date(chatLog.timestamp).toLocaleDateString()} -{" "}
+                  {new Date(chatLog.timestamp).toLocaleTimeString()}
+                </span>
+              </Comment.Metadata>
+              <Comment.Text>{chatLog.message}</Comment.Text>
+            </Comment.Content>
+          </Comment>
+        ))}
+      </Comment.Group>
+
+      <Input
+        placeholder="チャット"
+        value={chatMessage}
+        onChange={(event) => setChatMessage(event.target.value)}
+      />
+      <Button
+        onClick={() => {
+          if (self) {
+            emit("client/lounge/chatSend", {
+              user: self,
+              message: chatMessage,
+            });
+            setChatMessage("");
+          }
+        }}
+      >
+        送信
+      </Button>
     </div>
   );
 };

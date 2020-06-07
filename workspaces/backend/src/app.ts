@@ -17,6 +17,6 @@ app.use(cors());
 app.use(healthcheckRoute);
 app.use(usersRoute);
 
-io.of("/lounge").on("connection", (socket) =>
+io.of("/").on("connection", (socket) =>
   loungeSocket(new TypedSocketEvent(socket))
 );

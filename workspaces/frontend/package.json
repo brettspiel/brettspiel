@@ -24,6 +24,7 @@
     "@types/socket.io-client": "^1.4.33",
     "abort-controller": "^3.0.0",
     "classnames": "^2.2.6",
+    "clipboardy": "^2.3.0",
     "extensible-custom-error": "^0.0.7",
     "history": "^4.10.1",
     "purify-ts": "^0.15.1",

@@ -2,7 +2,7 @@ export const paths = {
   "/": {
     routingPath: "/",
   },
-  "/lounge": {
-    routingPath: "/lounge",
+  "/login": {
+    routingPath: "/login",
   },
 };
