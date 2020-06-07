@@ -6,6 +6,7 @@ import { ReduxState } from "../store";
 
 export type UserState = {
   self?: User;
+  secretToken?: string;
 };
 
 const initialState: UserState = {};
@@ -16,6 +17,9 @@ const slice = createSlice({
   reducers: {
     addSelf: (state, action: PayloadAction<User>) => {
       state.self = action.payload;
+    },
+    addSecretToken: (state, action: PayloadAction<string>) => {
+      state.secretToken = action.payload;
     },
   },
 });
@@ -35,6 +39,7 @@ export const createUser = createAsyncThunk(
       .then((result) => result.unsafeCoerce())
       .then((userResult) => {
         thunkApi.dispatch(slice.actions.addSelf(userResult.user));
+        thunkApi.dispatch(slice.actions.addSecretToken(userResult.secretToken));
       });
   }
 );

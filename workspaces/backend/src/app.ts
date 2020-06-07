@@ -6,6 +6,7 @@ import { healthcheckRoute } from "./controllers/healthcheck";
 import { usersRoute } from "./controllers/users";
 import { loungeSocket } from "./controllers/loungeSocket";
 import { TypedSocketEvent } from "./TypedSocketEvent";
+import { userStore } from "./stores/UserStore";
 
 const app = express();
 export const server = http.createServer(app);
@@ -28,6 +29,13 @@ app.use(cors());
 app.use(healthcheckRoute);
 app.use(usersRoute);
 
-io.of("/lounge").on("connection", (socket) =>
-  loungeSocket(new TypedSocketEvent(socket))
-);
+io.of("/lounge").on("connection", (socket) => {
+  const isAuthenticated =
+    userStore.get(socket.handshake.headers["x-user-id"])?.secretToken ===
+    socket.handshake.headers["x-secret-token"];
+  if (!isAuthenticated) {
+    socket.disconnect();
+  } else {
+    loungeSocket(new TypedSocketEvent(socket));
+  }
+});

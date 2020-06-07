@@ -10,14 +10,17 @@ import { addLog } from "../../modules/loungeChatLog";
 import { LoungePageSendChatWorkflow } from "../../debug/LoungePageSendChatWorkflow";
 
 export const LoungePage: React.FunctionComponent = () => {
-  const { self, serverAddress } = useLoggedInEffect();
+  const { self, serverAddress, secretToken } = useLoggedInEffect();
   const dispatch = useDispatch();
   const chatLogs = useReduxState((state) => state.loungeChatLog.logs);
   const [chatMessage, setChatMessage] = useState("");
-  const { connect, disconnect, emit, subscribe, unsubscribe } = useSocket(
-    serverAddress,
-    "/lounge"
-  );
+  const {
+    connect,
+    disconnect,
+    emit,
+    subscribe,
+    unsubscribe,
+  } = useSocket(serverAddress, "/lounge", { userId: self.id, secretToken });
   useEffect(() => {
     new LoungePageSendChatWorkflow(emit).run();
     // eslint-disable-next-line react-hooks/exhaustive-deps

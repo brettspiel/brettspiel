@@ -2,17 +2,21 @@ import { User } from "../types/domain/User";
 import { v4 } from "uuid";
 import { generateShortId } from "../utils/shortId";
 
+export type UserData = {
+  user: User;
+  secretToken: string;
+};
+
 type UserStoreInternal = {
-  [id: string]: {
-    user: User;
-    secretToken: string;
-  };
+  [id: string]: UserData;
 };
 
 export class UserStore {
   private store: UserStoreInternal = {};
 
-  insert = (name: string): { user: User; secretToken: string } => {
+  get = (id: string): UserData | undefined => this.store[id];
+
+  insert = (name: string): UserData => {
     const user: User = {
       id: v4(),
       name,

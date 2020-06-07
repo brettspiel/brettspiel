@@ -11,7 +11,11 @@ export const SocketProvider: React.FunctionComponent = ({ children }) => {
   return <SocketContext.Provider value={{}}>{children}</SocketContext.Provider>;
 };
 
-export const useSocket = (serverAddress: string, namespace?: string) => {
+export const useSocket = (
+  serverAddress: string,
+  namespace: string,
+  auth: { userId: string; secretToken: string }
+) => {
   const ctx = useContext(SocketContext);
 
   const isConnected = !!ctx.socket?.connected;
@@ -21,9 +25,25 @@ export const useSocket = (serverAddress: string, namespace?: string) => {
       const address = namespace
         ? `${serverAddress}${namespace}`
         : serverAddress;
-      ctx.socket = io(address);
+      ctx.socket = io(address, {
+        transportOptions: {
+          polling: {
+            extraHeaders: {
+              "x-user-id": auth.userId,
+              "x-secret-token": auth.secretToken,
+            },
+          },
+        },
+      });
     }
-  }, [isConnected, namespace, serverAddress, ctx.socket]);
+  }, [
+    isConnected,
+    namespace,
+    serverAddress,
+    ctx.socket,
+    auth.userId,
+    auth.secretToken,
+  ]);
 
   const disconnect = useCallback(() => {
     if (ctx.socket) {
