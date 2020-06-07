@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { addLog } from "../../modules/loungeChatLog";
 import { LoungePageSendChatWorkflow } from "../../debug/LoungePageSendChatWorkflow";
 
-export const RootPage: React.FunctionComponent = () => {
+export const LoungePage: React.FunctionComponent = () => {
   const { self, serverAddress } = useLoggedInEffect();
   const dispatch = useDispatch();
   const chatLogs = useReduxState((state) => state.loungeChatLog.logs);

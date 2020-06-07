@@ -2,7 +2,7 @@ import React from "react";
 import { Router, Route, Switch, Redirect } from "react-router";
 import { paths } from "../../paths";
 import { LoginPage } from "../LoginPage";
-import { RootPage } from "../RootPage";
+import { LoungePage } from "../LoungePage";
 import { Provider } from "react-redux";
 import { store } from "../../store";
 import styles from "./styles.module.css";
@@ -15,7 +15,7 @@ export const App: React.FunctionComponent = () => (
       <Router history={history}>
         <div className={styles.app}>
           <Switch>
-            <Route path={paths["/"].routingPath} component={RootPage} exact />
+            <Route path={paths["/"].routingPath} component={LoungePage} exact />
             <Route
               path={paths["/login"].routingPath}
               component={LoginPage}
