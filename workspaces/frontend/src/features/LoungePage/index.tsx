@@ -7,6 +7,7 @@ import {
   Header,
   Segment,
   Card,
+  Container,
 } from "semantic-ui-react";
 import { useSocket } from "../../hooks/useSocket";
 import { ChatLog } from "../../types/domain/ChatLog";
@@ -51,7 +52,7 @@ export const LoungePage: React.FunctionComponent = () => {
   }, []);
 
   return (
-    <div className={styles.lounge}>
+    <Container className={styles.lounge}>
       <Segment>
         <Header as="h3">ゲームを始める</Header>
         <Card.Group>
@@ -137,6 +138,6 @@ export const LoungePage: React.FunctionComponent = () => {
       >
         送信
       </Button>
-    </div>
+    </Container>
   );
 };
