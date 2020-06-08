@@ -1,8 +1,8 @@
 import { createClient, decodeResult } from "../api-client";
 import AbortControllerOriginal from "abort-controller";
-import { UserCreateRequest } from "../types/io/UserCreateRequest";
 import { unknown } from "purify-ts";
-import { UsersCreateResponse } from "../types/io/UsersCreateResponse";
+import { UserCreateRequest } from "@brettspiel/io-types/lib/rest/UserCreateRequest";
+import { UsersCreateResponse } from "@brettspiel/io-types/lib/rest/UsersCreateResponse";
 
 export class UsersApi {
   private clients: ReturnType<typeof createClient>;

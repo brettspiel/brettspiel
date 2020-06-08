@@ -1,8 +1,8 @@
-import { User } from "../types/domain/User";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UsersApi } from "../api/UsersApi";
-import { UserCreateRequest } from "../types/io/UserCreateRequest";
 import { ReduxState } from "../store";
+import { User } from "@brettspiel/domain-types/lib/User";
+import { UserCreateRequest } from "@brettspiel/io-types/lib/rest/UserCreateRequest";
 
 export type UserState = {
   self?: User;

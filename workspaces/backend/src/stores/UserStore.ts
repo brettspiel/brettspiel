@@ -1,6 +1,6 @@
-import { User } from "../types/domain/User";
 import { v4 } from "uuid";
 import { generateShortId } from "../utils/shortId";
+import { User } from "@brettspiel/domain-types/lib/User";
 
 export type UserData = {
   user: User;

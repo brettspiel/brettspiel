@@ -2,20 +2,20 @@ import React, { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import {
   Button,
-  Input,
-  Comment,
-  Header,
-  Segment,
   Card,
+  Comment,
   Container,
+  Header,
+  Input,
+  Segment,
 } from "semantic-ui-react";
 import { useSocket } from "../../hooks/useSocket";
-import { ChatLog } from "../../types/domain/ChatLog";
 import { useReduxState } from "../../hooks/useReduxState";
 import { useDispatch } from "react-redux";
 import { addLog } from "../../modules/loungeChatLog";
 import { LoungePageSendChatWorkflow } from "../../debug/LoungePageSendChatWorkflow";
 import { useLoggedIn } from "../LoggedInRoute";
+import { ChatLog } from "@brettspiel/domain-types/lib/ChatLog";
 
 export const LoungePage: React.FunctionComponent = () => {
   const { self, serverAddress, secretToken } = useLoggedIn();

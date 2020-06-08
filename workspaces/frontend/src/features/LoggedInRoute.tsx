@@ -3,7 +3,7 @@ import { Redirect, Route, RouteProps } from "react-router";
 import { useServerConnection } from "../hooks/useServerConnection";
 import { useReduxState } from "../hooks/useReduxState";
 import { paths } from "../paths";
-import { User } from "../types/domain/User";
+import { User } from "@brettspiel/domain-types/lib/User";
 
 type LoggedInContextValue = {
   self: User;

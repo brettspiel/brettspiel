@@ -8,6 +8,8 @@
     "format": "prettier --write --ignore-path .gitignore"
   },
   "dependencies": {
+    "@brettspiel/domain-types": "0.1.0",
+    "@brettspiel/io-types": "0.1.0",
     "@brettspiel/utils": "0.1.0",
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.6",

@@ -1,7 +1,7 @@
 import { Codec, GetInterface } from "purify-ts";
-import { RangedLengthString } from "../utils/codec";
+import { StringLengthRangedIn } from "purify-ts-extra-codec";
 
 export type UserCreateRequest = GetInterface<typeof UserCreateRequest>;
 export const UserCreateRequest = Codec.interface({
-  name: RangedLengthString({ gt: 0, lte: 30 }),
+  name: StringLengthRangedIn({ gt: 0, lte: 30 }),
 });

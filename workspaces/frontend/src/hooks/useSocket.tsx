@@ -5,11 +5,14 @@ import React, {
   useContext,
   useRef,
 } from "react";
-import { SocketEvent, SocketEventType } from "../types/io/SocketEvent";
 import {
   ClientSocket,
   SocketAuth,
 } from "@brettspiel/typed-socket/lib/ClientSocket";
+import {
+  SocketEvent,
+  SocketEventType,
+} from "@brettspiel/typed-socket/lib/SocketEvent";
 
 export const SocketContext = createContext<
   MutableRefObject<ClientSocket | undefined>

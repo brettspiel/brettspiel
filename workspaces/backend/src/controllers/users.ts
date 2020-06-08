@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { EitherAsync } from "purify-ts";
-import { UserCreateRequest } from "../types/io/UserCreateRequest";
-import { UsersCreateResponse } from "../types/io/UsersCreateResponse";
-import { ErrorResponse } from "../types/io/ErrorResponse";
 import { userStore } from "../stores/UserStore";
+import { UsersCreateResponse } from "@brettspiel/io-types/lib/rest/UsersCreateResponse";
+import { ErrorResponse } from "@brettspiel/io-types/lib/rest/ErrorResponse";
+import { UserCreateRequest } from "@brettspiel/io-types/lib/rest/UserCreateRequest";
 
 export const usersRoute = Router();
 

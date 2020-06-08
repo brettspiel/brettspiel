@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChatLog } from "../types/domain/ChatLog";
+import { ChatLog } from "@brettspiel/domain-types/lib/ChatLog";
 
 export type LoungeChatLogState = {
   logs: ChatLog[];

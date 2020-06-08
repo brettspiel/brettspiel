@@ -5,8 +5,8 @@ import cors from "cors";
 import { healthcheckRoute } from "./controllers/healthcheck";
 import { usersRoute } from "./controllers/users";
 import { loungeSocket } from "./controllers/loungeSocket";
-import { TypedSocketEvent } from "./TypedSocketEvent";
 import { userStore } from "./stores/UserStore";
+import { ServerSocket } from "@brettspiel/typed-socket/lib/ServerSocket";
 
 const app = express();
 export const server = http.createServer(app);
@@ -36,6 +36,6 @@ io.of("/lounge").on("connection", (socket) => {
   if (!isAuthenticated) {
     socket.disconnect();
   } else {
-    loungeSocket(new TypedSocketEvent(socket));
+    loungeSocket(new ServerSocket(socket));
   }
 });

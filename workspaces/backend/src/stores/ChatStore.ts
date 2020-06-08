@@ -1,5 +1,5 @@
-import { ChatLog } from "../../src/types/domain/ChatLog";
-import { User } from "../../src/types/domain/User";
+import { ChatLog } from "@brettspiel/domain-types/lib/ChatLog";
+import { User } from "@brettspiel/domain-types/lib/User";
 
 type ChatStoreInternal = {
   logs: ChatLog[];
