@@ -8,6 +8,7 @@ portfinder
   .then((port) => new Launcher(server).launch(port))
   .then((serverUrl) => {
     console.log(`Server launched at ${serverUrl}`);
+
     return clipboardy.write(serverUrl);
   })
   .catch(console.error);

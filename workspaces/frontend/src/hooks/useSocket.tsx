@@ -1,63 +1,56 @@
-import React, { createContext, useCallback, useContext } from "react";
-import io, { Socket } from "socket.io-client";
+import React, {
+  createContext,
+  MutableRefObject,
+  useCallback,
+  useContext,
+  useRef,
+} from "react";
 import { SocketEvent, SocketEventType } from "../types/io/SocketEvent";
+import {
+  ClientSocket,
+  SocketAuth,
+} from "@brettspiel/typed-socket/lib/ClientSocket";
 
-export type SocketContextValue = {
-  socket?: typeof Socket;
-};
-
-export const SocketContext = createContext<SocketContextValue>({});
+export const SocketContext = createContext<
+  MutableRefObject<ClientSocket | undefined>
+>({ current: undefined });
 export const SocketProvider: React.FunctionComponent = ({ children }) => {
-  return <SocketContext.Provider value={{}}>{children}</SocketContext.Provider>;
+  const socketClientRef = useRef<ClientSocket>();
+  return (
+    <SocketContext.Provider value={socketClientRef}>
+      {children}
+    </SocketContext.Provider>
+  );
 };
 
 export const useSocket = (
   serverAddress: string,
   namespace: string,
-  auth: { userId: string; secretToken: string }
+  auth: SocketAuth
 ) => {
   const ctx = useContext(SocketContext);
 
-  const isConnected = !!ctx.socket?.connected;
+  const isConnected = ctx.current?.isConnected;
 
   const connect = useCallback(() => {
     if (!isConnected) {
       const address = namespace
         ? `${serverAddress}${namespace}`
         : serverAddress;
-      ctx.socket = io(address, {
-        transportOptions: {
-          polling: {
-            extraHeaders: {
-              "x-user-id": auth.userId,
-              "x-secret-token": auth.secretToken,
-            },
-          },
-        },
-      });
+
+      ctx.current = new ClientSocket(address, auth);
     }
-  }, [
-    isConnected,
-    namespace,
-    serverAddress,
-    ctx.socket,
-    auth.userId,
-    auth.secretToken,
-  ]);
+  }, [isConnected, namespace, serverAddress, ctx, auth]);
 
   const disconnect = useCallback(() => {
-    if (ctx.socket) {
-      ctx.socket.disconnect();
-    }
-  }, [ctx.socket]);
+    ctx.current?.disconnect();
+  }, [ctx]);
 
   const emit = useCallback(
     <T extends SocketEventType>(type: T, value: SocketEvent[T]) => {
-      if (ctx.socket) {
-        ctx.socket.emit(type, value);
-      }
+      ctx.current?.emit(type, value);
     },
-    [ctx.socket]
+    [ctx]
   );
 
   const subscribe = useCallback(
@@ -65,11 +58,9 @@ export const useSocket = (
       type: T,
       subscriber: (value: SocketEvent[T]) => void
     ) => {
-      if (ctx.socket) {
-        ctx.socket.on(type, subscriber);
-      }
+      ctx.current?.on(type, subscriber);
     },
-    [ctx.socket]
+    [ctx]
   );
 
   const unsubscribe = useCallback(
@@ -77,11 +68,9 @@ export const useSocket = (
       type: T,
       subscriber: (value: SocketEvent[T]) => void
     ) => {
-      if (ctx.socket) {
-        ctx.socket.off(type, subscriber);
-      }
+      ctx.current?.off(type, subscriber);
     },
-    [ctx.socket]
+    [ctx]
   );
 
   return {
