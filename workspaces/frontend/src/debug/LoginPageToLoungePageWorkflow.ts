@@ -6,7 +6,7 @@ import { DEBUG_MODE } from "../constants";
 import { history } from "../history";
 import { read } from "clipboardy";
 
-export class TitleMenuPageToLoungePageWorkflow {
+export class LoginPageToLoungePageWorkflow {
   private dispatch = store.dispatch;
 
   run = async () => {
@@ -14,6 +14,7 @@ export class TitleMenuPageToLoungePageWorkflow {
 
     const serverAddress = await read();
     if (!serverAddress) return;
+    if (!serverAddress.includes("ngrok.io")) return;
 
     await this.dispatch(registerAddress(serverAddress));
     await this.dispatch(createUser("BotUser"));

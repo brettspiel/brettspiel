@@ -3,7 +3,7 @@ import styles from "./styles.module.css";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { paths } from "../../paths";
-import { TitleMenuPageToLoungePageWorkflow } from "../../debug/TitleMenuPageToLoungePageWorkflow";
+import { LoginPageToLoungePageWorkflow } from "../../debug/LoginPageToLoungePageWorkflow";
 import { Button, Form, Image } from "semantic-ui-react";
 import { healthcheck } from "../../api/healthcheck";
 import { registerAddress } from "../../modules/server";
@@ -11,7 +11,7 @@ import { createUser } from "../../modules/user";
 
 export const LoginPage: React.FunctionComponent = () => {
   useEffect(() => {
-    new TitleMenuPageToLoungePageWorkflow().run();
+    new LoginPageToLoungePageWorkflow().run();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
