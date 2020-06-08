@@ -52,8 +52,8 @@ export const LoungePage: React.FunctionComponent = () => {
 
   return (
     <div className={styles.lounge}>
-      <Header as="h3">ゲームを始める</Header>
       <Segment>
+        <Header as="h3">ゲームを始める</Header>
         <Card.Group>
           <Card>
             <Card.Content header="TicTacToe" meta="アブストラクト" />
@@ -65,6 +65,30 @@ export const LoungePage: React.FunctionComponent = () => {
           </Card>
           <Card>
             <Card.Content header="L.A.M.A." meta="カードゲーム" />
+            <Card.Content extra>
+              <Button basic color="green">
+                このゲームで遊ぶ
+              </Button>
+            </Card.Content>
+          </Card>
+          <Card>
+            <Card.Content header="ZÈRTZ" meta="アブストラクト" />
+            <Card.Content extra>
+              <Button basic color="green">
+                このゲームで遊ぶ
+              </Button>
+            </Card.Content>
+          </Card>
+          <Card>
+            <Card.Content header="AZUL" meta="アブストラクト" />
+            <Card.Content extra>
+              <Button basic color="green">
+                このゲームで遊ぶ
+              </Button>
+            </Card.Content>
+          </Card>
+          <Card>
+            <Card.Content header="Factory Fun" meta="パズル リアルタイム" />
             <Card.Content extra>
               <Button basic color="green">
                 このゲームで遊ぶ
