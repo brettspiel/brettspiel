@@ -42,12 +42,18 @@ export const LoungePage: React.FunctionComponent = () => {
   );
   useEffect(() => {
     connect();
+    return () => disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
     subscribe("server/lounge/chatLog", chatLogSubscriber);
-
-    return () => {
-      unsubscribe("server/lounge/chatLog", chatLogSubscriber);
-      disconnect();
-    };
+    return () => unsubscribe("server/lounge/chatLog", chatLogSubscriber);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    const subscriber = console.log;
+    subscribe("server/lounge/roomStatusChange", subscriber);
+    return () => unsubscribe("server/lounge/roomStatusChange", subscriber);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -59,7 +65,13 @@ export const LoungePage: React.FunctionComponent = () => {
           <Card>
             <Card.Content header="TicTacToe" meta="アブストラクト" />
             <Card.Content extra>
-              <Button basic color="green">
+              <Button
+                basic
+                color="green"
+                onClick={() => {
+                  emit("client/lounge/openRoom", "TicTacToe");
+                }}
+              >
                 このゲームで遊ぶ
               </Button>
             </Card.Content>

@@ -8,4 +8,10 @@ export const loungeSocket = (socketEvent: ServerSocket) => {
     socketEvent.emit("server/lounge/chatLog", log); // emit to self
     socketEvent.broadcast?.emit("server/lounge/chatLog", log); // emit to others
   });
+
+  socketEvent.on("client/lounge/openRoom", (roomType) => {
+    console.log("@roomType", roomType);
+    socketEvent.emit("server/lounge/roomStatusChange", roomType);
+    socketEvent.broadcast?.emit("server/lounge/roomStatusChange", roomType);
+  });
 };
