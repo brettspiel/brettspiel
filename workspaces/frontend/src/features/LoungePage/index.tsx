@@ -1,16 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.css";
-import { Button, Input, Comment, Header, Segment } from "semantic-ui-react";
+import {
+  Button,
+  Input,
+  Comment,
+  Header,
+  Segment,
+  Card,
+} from "semantic-ui-react";
 import { useSocket } from "../../hooks/useSocket";
 import { ChatLog } from "../../types/domain/ChatLog";
-import { useLoggedInEffect } from "../../hooks/useLoggedInEffect";
 import { useReduxState } from "../../hooks/useReduxState";
 import { useDispatch } from "react-redux";
 import { addLog } from "../../modules/loungeChatLog";
 import { LoungePageSendChatWorkflow } from "../../debug/LoungePageSendChatWorkflow";
+import { useLoggedIn } from "../LoggedInRoute";
 
 export const LoungePage: React.FunctionComponent = () => {
-  const { self, serverAddress, secretToken } = useLoggedInEffect();
+  const { self, serverAddress, secretToken } = useLoggedIn();
   const dispatch = useDispatch();
   const chatLogs = useReduxState((state) => state.loungeChatLog.logs);
   const [chatMessage, setChatMessage] = useState("");
@@ -47,7 +54,24 @@ export const LoungePage: React.FunctionComponent = () => {
     <div className={styles.lounge}>
       <Header as="h3">ゲームを始める</Header>
       <Segment>
-        <div>マルバツゲーム</div>
+        <Card.Group>
+          <Card>
+            <Card.Content header="TicTacToe" meta="アブストラクト" />
+            <Card.Content extra>
+              <Button basic color="green">
+                このゲームで遊ぶ
+              </Button>
+            </Card.Content>
+          </Card>
+          <Card>
+            <Card.Content header="L.A.M.A." meta="カードゲーム" />
+            <Card.Content extra>
+              <Button basic color="green">
+                このゲームで遊ぶ
+              </Button>
+            </Card.Content>
+          </Card>
+        </Card.Group>
       </Segment>
 
       <Comment.Group>

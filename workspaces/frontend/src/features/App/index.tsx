@@ -8,6 +8,7 @@ import { store } from "../../store";
 import styles from "./styles.module.css";
 import { SocketProvider } from "../../hooks/useSocket";
 import { history } from "../../history";
+import { LoggedInRoute } from "../LoggedInRoute";
 
 export const App: React.FunctionComponent = () => (
   <Provider store={store}>
@@ -15,7 +16,11 @@ export const App: React.FunctionComponent = () => (
       <Router history={history}>
         <div className={styles.app}>
           <Switch>
-            <Route path={paths["/"].routingPath} component={LoungePage} exact />
+            <LoggedInRoute
+              path={paths["/"].routingPath}
+              component={LoungePage}
+              exact
+            />
             <Route
               path={paths["/login"].routingPath}
               component={LoginPage}
