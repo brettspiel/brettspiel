@@ -1,11 +1,11 @@
 import { Either, Left, Right } from "purify-ts/Either";
 import {
   ApiError,
-  ApiInvalidJsonError,
-  ApiRequestAbortedError,
-  ApiResponse4xxError,
-  ApiResponse5xxError,
-} from "./ApiError";
+  Response4xxError,
+  Response5xxError,
+  InvalidJsonError,
+  RequestAbortedError,
+} from "./Errors";
 import { stringify } from "qs";
 import OriginalAbortController from "abort-controller";
 
@@ -31,32 +31,25 @@ export const createClient = (
           // status is 400
           if (Math.floor(res.status / 100) === 4)
             return Left<ApiError, T>(
-              new ApiResponse4xxError(
-                `responseBody(text)=[${await res.clone().text()}]`
-              )
+              new Response4xxError(`Status got ${res.status}`)
             );
           // status is 500
           if (Math.floor(res.status / 100) === 5)
             return Left<ApiError, T>(
-              new ApiResponse5xxError(
-                `responseBody(text)=[${await res.clone().text()}]`
-              )
+              new Response5xxError(`Status got ${res.status}`)
             );
 
           try {
             return Right<T, ApiError>(await res.clone().json());
           } catch (error) {
             return Left<ApiError, T>(
-              new ApiInvalidJsonError(
-                `responseBody(text)=[${await res.clone().text()}]`,
-                error
-              )
+              new InvalidJsonError(await res.clone().text(), error)
             );
           }
         })
         .catch((reason) => {
           if (reason.name === "AbortError")
-            return Left<ApiError, T>(new ApiRequestAbortedError(path));
+            return Left<ApiError, T>(new RequestAbortedError());
           throw reason;
         });
     };

@@ -1,10 +1,7 @@
 import { Result } from "./client";
-import { ApiError } from "./ApiError";
-import { JsonValidationError } from "./JsonValidationError";
 import { Either, Left } from "purify-ts/Either";
 import { Codec } from "purify-ts/Codec";
-
-export type ApiClientError = JsonValidationError | ApiError;
+import { ApiClientError, MalformedResponseError } from "./Errors";
 
 export type ResultLike<P> = {
   controller: AbortController;
@@ -18,14 +15,14 @@ export const decodeResult = <T>(
   mapPromise(result, (value) =>
     (value as Either<ApiClientError, T>).chain((v) =>
       ResultCodec.decode(v).chainLeft((reason) =>
-        Left(new JsonValidationError(reason))
+        Left(new MalformedResponseError(reason))
       )
     )
   );
 
 const mapPromise = <T, P>(
   { promise, ...rest }: Result<T>,
-  pipe: (v: Either<ApiError, T>) => P
+  pipe: (v: Either<ApiClientError, T>) => P
 ): ResultLike<P> => ({
   ...rest,
   promise: () => promise().then(pipe),
