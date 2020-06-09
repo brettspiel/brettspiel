@@ -1,5 +1,5 @@
-import { createClient } from "../api-client";
 import AbortControllerOriginal from "abort-controller";
+import { createClient } from "@brettspiel/api-client/lib/client";
 
 export class ChatApi {
   private clients: ReturnType<typeof createClient>;
