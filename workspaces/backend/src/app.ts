@@ -30,12 +30,12 @@ app.use("__healthcheck", healthcheckRoute);
 app.use("/users", usersRoute);
 
 io.of("/lounge").on("connection", (socket) => {
+  const userData = userStore.get(socket.handshake.headers["x-user-id"]);
+  if (!userData) return socket.disconnect();
+
   const isAuthenticated =
-    userStore.get(socket.handshake.headers["x-user-id"])?.secretToken ===
-    socket.handshake.headers["x-secret-token"];
-  if (!isAuthenticated) {
-    socket.disconnect();
-  } else {
-    loungeSocket(new ServerSocket(socket));
-  }
+    userData.secretToken === socket.handshake.headers["x-secret-token"];
+  if (!isAuthenticated) return socket.disconnect();
+
+  loungeSocket(new ServerSocket(socket), userData.user);
 });
