@@ -8,7 +8,7 @@ import { UserCreateRequest } from "@brettspiel/io-types/lib/rest/UserCreateReque
 export const usersRoute = Router();
 
 usersRoute.post<any, UsersCreateResponse | ErrorResponse, any, any>(
-  "/users",
+  "/",
   (req, res) => {
     EitherAsync<string, UsersCreateResponse>(async ({ liftEither }) => {
       const { name } = await liftEither(UserCreateRequest.decode(req.body));

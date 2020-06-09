@@ -16,6 +16,8 @@ import { addLog } from "../../modules/loungeChatLog";
 import { LoungePageSendChatWorkflow } from "../../debug/LoungePageSendChatWorkflow";
 import { useLoggedIn } from "../LoggedInRoute";
 import { ChatLog } from "@brettspiel/domain-types/lib/ChatLog";
+import { games } from "@brettspiel/games/lib/games";
+import { GameType } from "@brettspiel/domain-types/lib/GameRoom";
 
 export const LoungePage: React.FunctionComponent = () => {
   const { self, serverAddress, secretToken } = useLoggedIn();
@@ -62,52 +64,28 @@ export const LoungePage: React.FunctionComponent = () => {
       <Segment>
         <Header as="h3">ゲームを始める</Header>
         <Card.Group>
-          <Card>
-            <Card.Content header="TicTacToe" meta="アブストラクト" />
-            <Card.Content extra>
-              <Button
-                basic
-                color="green"
-                onClick={() => {
-                  emit("client/lounge/openRoom", "TicTacToe");
-                }}
-              >
-                このゲームで遊ぶ
-              </Button>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content header="L.A.M.A." meta="カードゲーム" />
-            <Card.Content extra>
-              <Button basic color="green">
-                このゲームで遊ぶ
-              </Button>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content header="ZÈRTZ" meta="アブストラクト" />
-            <Card.Content extra>
-              <Button basic color="green">
-                このゲームで遊ぶ
-              </Button>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content header="AZUL" meta="アブストラクト" />
-            <Card.Content extra>
-              <Button basic color="green">
-                このゲームで遊ぶ
-              </Button>
-            </Card.Content>
-          </Card>
-          <Card>
-            <Card.Content header="Factory Fun" meta="パズル リアルタイム" />
-            <Card.Content extra>
-              <Button basic color="green">
-                このゲームで遊ぶ
-              </Button>
-            </Card.Content>
-          </Card>
+          {Object.entries(games).map(([type, game]) => (
+            <Card key={type}>
+              <Card.Content
+                header={game.name}
+                meta={game.categories.join("/")}
+              />
+              <Card.Content extra>
+                <Button
+                  basic
+                  color="green"
+                  onClick={() => {
+                    emit(
+                      "client/lounge/openRoom",
+                      GameType.decode(type).unsafeCoerce()
+                    );
+                  }}
+                >
+                  このゲームで遊ぶ
+                </Button>
+              </Card.Content>
+            </Card>
+          ))}
         </Card.Group>
       </Segment>
 

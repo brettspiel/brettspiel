@@ -26,8 +26,8 @@ const io = socketIo(server, {
 app.use(express.json());
 app.use(cors());
 
-app.use(healthcheckRoute);
-app.use(usersRoute);
+app.use("__healthcheck", healthcheckRoute);
+app.use("/users", usersRoute);
 
 io.of("/lounge").on("connection", (socket) => {
   const isAuthenticated =

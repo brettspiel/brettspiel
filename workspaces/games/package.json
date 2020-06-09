@@ -1,5 +1,5 @@
 {
-  "name": "@brettspiel/domain-types",
+  "name": "@brettspiel/games",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "typescript": "3.9.3",
-    "purify-ts": "^0.15.1",
+    "@brettspiel/domain-types": "0.1.0",
     "purify-ts-extra-codec": "^0.2.0"
   },
   "devDependencies": {

@@ -25,6 +25,7 @@
     "@brettspiel/domain-types": "0.1.0",
     "@brettspiel/io-types": "0.1.0",
     "@brettspiel/typed-socket": "0.1.0",
+    "@brettspiel/games": "0.1.0",
     "abort-controller": "^3.0.0",
     "classnames": "^2.2.6",
     "clipboardy": "^2.3.0",
