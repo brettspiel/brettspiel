@@ -10,6 +10,7 @@
   "dependencies": {
     "typescript": "3.9.3",
     "@brettspiel/domain-types": "0.1.0",
+    "purify-ts": "^0.15.1",
     "purify-ts-extra-codec": "^0.2.0"
   },
   "devDependencies": {
