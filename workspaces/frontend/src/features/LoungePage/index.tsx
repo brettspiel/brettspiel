@@ -18,6 +18,7 @@ import { useLoggedIn } from "../LoggedInRoute";
 import { ChatLog } from "@brettspiel/domain-types/lib/ChatLog";
 import { games } from "@brettspiel/games/lib/games";
 import { GameType } from "@brettspiel/domain-types/lib/GameRoom";
+import { GameRoomsApi } from "../../api/GameRoomsApi";
 
 export const LoungePage: React.FunctionComponent = () => {
   const { self, serverAddress, secretToken } = useLoggedIn();
@@ -58,6 +59,12 @@ export const LoungePage: React.FunctionComponent = () => {
     return () => unsubscribe("server/lounge/roomStatusChange", subscriber);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    new GameRoomsApi(serverAddress, { userId: self.id, secretToken })
+      .list()
+      .promise()
+      .then(console.log);
+  }, [secretToken, self.id, serverAddress]);
 
   return (
     <Container className={styles.lounge}>
