@@ -23,7 +23,7 @@ export const LoungePage: React.FunctionComponent = () => {
   const { sendMessage, readyState } = useSocket("/echo");
   useEffect(() => {
     if (readyState === ReadyState.OPEN) {
-      sendMessage("hello!!!!!!!");
+      sendMessage(JSON.stringify({ type: "hello" }));
     }
   }, [readyState, sendMessage]);
 
