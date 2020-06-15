@@ -8,10 +8,13 @@
   "author": "airtoxin",
   "license": "MIT",
   "scripts": {
+    "postinstall": "patch-package",
     "start": "wsrun -c start",
     "build": "wsrun -c build"
   },
   "dependencies": {
-    "wsrun": "5.2.0"
+    "wsrun": "5.2.0",
+    "patch-package": "^6.2.2",
+    "postinstall-postinstall": "^2.1.0"
   }
 }
