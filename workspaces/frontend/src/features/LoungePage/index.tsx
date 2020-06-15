@@ -15,6 +15,7 @@ import { useLoggedIn } from "../LoggedInRoute";
 import { games } from "@brettspiel/games/lib/games";
 import { useSocket } from "../../hooks/useSocket";
 import { ReadyState } from "react-use-websocket/dist";
+import { SocketMessage } from "@brettspiel/io-types/lib/socket/SocketMessage";
 
 export const LoungePage: React.FunctionComponent = () => {
   const { self } = useLoggedIn();
@@ -23,7 +24,9 @@ export const LoungePage: React.FunctionComponent = () => {
   const { sendMessage, readyState } = useSocket("/echo");
   useEffect(() => {
     if (readyState === ReadyState.OPEN) {
-      sendMessage(JSON.stringify({ type: "hello" }));
+      sendMessage(
+        SocketMessage.encode({ type: "hello", payload: undefined }) as any
+      );
     }
   }, [readyState, sendMessage]);
 

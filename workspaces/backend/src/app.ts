@@ -27,6 +27,7 @@ app.use("/users", usersRoute);
 
 app.ws("/echo", withSocketAuth, withSocketBroadcaster, (ws, req) => {
   ws.on("message", (message) => {
+    console.log("@SocketMessage", SocketMessage.decode(message));
     req.broadcast({
       type: "message",
       payload: `Hello ${req.user?.name}. ${message}`,

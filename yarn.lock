@@ -9263,6 +9263,11 @@ purify-ts-extra-codec@^0.2.0:
   dependencies:
     date-fns "^2.14.0"
 
+purify-ts-extra-codec@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/purify-ts-extra-codec/-/purify-ts-extra-codec-0.3.0.tgz#fe87f816771a6f458247f3d884b29b5b9ad87980"
+  integrity sha512-gl6pUtBh/abDjPEn5dk9IJb2BhufWgJboJHSnJv55YnhiimGRnch75gyRC4NMzqjyM5w7Q7zB4YvS8EZnItshA==
+
 purify-ts@^0.15.1:
   version "0.15.1"
   resolved "https://registry.yarnpkg.com/purify-ts/-/purify-ts-0.15.1.tgz#fb32811d745d4fce7c592d36fc64c01a57a4dbf8"
