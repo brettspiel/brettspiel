@@ -7,9 +7,7 @@ import { usersRoute } from "./controllers/users";
 import { loungeSocket } from "./controllers/loungeSocket";
 import { ServerSocket } from "@brettspiel/typed-socket/lib/ServerSocket";
 import { socketIoPreflightRequestHandler } from "./middlewares/socketIoPreflightRequestHandler";
-import { gameRoomsRoute } from "./controllers/gameRooms";
 import { socketAuth } from "./middlewares/socketAuth";
-import { withAuth } from "./middlewares/withAuth";
 
 const app = express();
 export const server = http.createServer(app);
@@ -22,7 +20,6 @@ app.use(cors());
 
 app.use("__healthcheck", healthcheckRoute);
 app.use("/users", usersRoute);
-app.use("/gameRooms", withAuth, gameRoomsRoute);
 
 io.of("/lounge").on(
   "connection",

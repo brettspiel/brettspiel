@@ -13,6 +13,6 @@ export class LoungePageSendChatWorkflow {
         user: store.getState().user.self!,
         message: Math.random().toString(),
       });
-    }, 5000);
+    }, 10 * 1000);
   };
 }

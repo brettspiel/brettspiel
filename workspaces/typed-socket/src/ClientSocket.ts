@@ -1,5 +1,6 @@
 import io from "socket.io-client";
 import { SocketEvent, SocketEventType } from "./SocketEvent";
+import { SocketRequest, SocketRequestType } from "./SocketRequest";
 
 export type SocketAuth = {
   userId: string;
@@ -26,6 +27,13 @@ export class ClientSocket {
   }
 
   disconnect = () => this.socket.disconnect();
+
+  request = <T extends SocketRequestType>(type: T, body: SocketRequest[T][0]) =>
+    new Promise<SocketRequest[T][1]>((resolve) => {
+      this.socket.emit(type, body);
+      this.socket.emit(type, body); // FIXME: First time emit ignored ???
+      this.socket.once(type + "/res", resolve);
+    });
 
   emit = <T extends SocketEventType>(type: T, value: SocketEvent[T]) => {
     this.socket.emit(type, value);

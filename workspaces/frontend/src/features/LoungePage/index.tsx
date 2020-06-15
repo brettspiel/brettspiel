@@ -7,6 +7,7 @@ import {
   Container,
   Header,
   Input,
+  Item,
   Segment,
 } from "semantic-ui-react";
 import { useSocket } from "../../hooks/useSocket";
@@ -17,8 +18,7 @@ import { LoungePageSendChatWorkflow } from "../../debug/LoungePageSendChatWorkfl
 import { useLoggedIn } from "../LoggedInRoute";
 import { ChatLog } from "@brettspiel/domain-types/lib/ChatLog";
 import { games } from "@brettspiel/games/lib/games";
-import { GameType } from "@brettspiel/domain-types/lib/GameRoom";
-import { GameRoomsApi } from "../../api/GameRoomsApi";
+import { GameRoom, GameType } from "@brettspiel/domain-types/lib/GameRoom";
 
 export const LoungePage: React.FunctionComponent = () => {
   const { self, serverAddress, secretToken } = useLoggedIn();
@@ -28,6 +28,7 @@ export const LoungePage: React.FunctionComponent = () => {
   const {
     connect,
     disconnect,
+    request,
     emit,
     subscribe,
     unsubscribe,
@@ -53,18 +54,18 @@ export const LoungePage: React.FunctionComponent = () => {
     return () => unsubscribe("server/lounge/chatLog", chatLogSubscriber);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const [gameRooms, setGameRooms] = useState<GameRoom[]>([]);
   useEffect(() => {
-    const subscriber = console.log;
-    subscribe("server/lounge/roomStatusChange", subscriber);
-    return () => unsubscribe("server/lounge/roomStatusChange", subscriber);
+    subscribe("server/lounge/roomStatusChange", setGameRooms);
+    return () => unsubscribe("server/lounge/roomStatusChange", setGameRooms);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    new GameRoomsApi(serverAddress, { userId: self.id, secretToken })
-      .list()
-      .promise()
-      .then(console.log);
-  }, [secretToken, self.id, serverAddress]);
+    request("request/lounge/rooms", null).then((rooms) => {
+      if (rooms) setGameRooms(rooms);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container className={styles.lounge}>
@@ -73,10 +74,20 @@ export const LoungePage: React.FunctionComponent = () => {
         <Card.Group>
           {Object.entries(games).map(([type, game]) => (
             <Card key={type}>
-              <Card.Content
-                header={game.name}
-                meta={game.categories.join("/")}
-              />
+              <Card.Content>
+                <Card.Header>{game.name}</Card.Header>
+                <Card.Meta>{game.categories.join("/")}</Card.Meta>
+
+                <Item.Group divided>
+                  {gameRooms
+                    .filter((room) => room.type === type)
+                    .map((room) => (
+                      <Item
+                        key={room.id}
+                      >{`${room.host.name} is wanting player of ${room.type}`}</Item>
+                    ))}
+                </Item.Group>
+              </Card.Content>
               <Card.Content extra>
                 <Button
                   basic

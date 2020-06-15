@@ -13,6 +13,10 @@ import {
   SocketEvent,
   SocketEventType,
 } from "@brettspiel/typed-socket/lib/SocketEvent";
+import {
+  SocketRequest,
+  SocketRequestType,
+} from "@brettspiel/typed-socket/lib/SocketRequest";
 
 export const SocketContext = createContext<
   MutableRefObject<ClientSocket | undefined>
@@ -49,6 +53,13 @@ export const useSocket = (
     ctx.current?.disconnect();
   }, [ctx]);
 
+  const request = useCallback(
+    async <T extends SocketRequestType>(type: T, body: SocketRequest[T][0]) => {
+      return ctx.current?.request(type, body);
+    },
+    [ctx]
+  );
+
   const emit = useCallback(
     <T extends SocketEventType>(type: T, value: SocketEvent[T]) => {
       ctx.current?.emit(type, value);
@@ -80,6 +91,7 @@ export const useSocket = (
     isConnected,
     connect,
     disconnect,
+    request,
     emit,
     subscribe,
     unsubscribe,

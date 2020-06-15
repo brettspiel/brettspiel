@@ -8,5 +8,5 @@ export type SocketEvent = {
   "server/lounge/chatLog": ChatLog;
 
   "client/lounge/openRoom": GameType;
-  "server/lounge/roomStatusChange": GameRoom;
+  "server/lounge/roomStatusChange": GameRoom[];
 };
