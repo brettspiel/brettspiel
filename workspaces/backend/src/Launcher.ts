@@ -1,13 +1,14 @@
 import { Server } from "http";
 import ngrok from "ngrok";
+import { Application } from "express";
 
 export class Launcher {
   private server: Server | null = null;
-  constructor(private httpServer: Server) {}
+  constructor(private app: Application) {}
 
   launch = async (port: number): Promise<string> => {
-    this.server = this.httpServer.listen(port);
-    return ngrok.connect(port);
+    this.server = this.app.listen(port);
+    return ngrok.connect({ addr: port, region: "ap" });
   };
 
   stop = (): Promise<void> =>

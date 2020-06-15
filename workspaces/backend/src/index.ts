@@ -1,11 +1,11 @@
 import { Launcher } from "./Launcher";
-import { server } from "./app";
+import { app } from "./app";
 import portfinder from "portfinder";
 import clipboardy from "clipboardy";
 
 portfinder
   .getPortPromise()
-  .then((port) => new Launcher(server).launch(port))
+  .then((port) => new Launcher(app).launch(port))
   .then((serverUrl) => {
     console.log(`Server launched at ${serverUrl}`);
 
