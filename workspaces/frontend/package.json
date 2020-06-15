@@ -9,6 +9,11 @@
     "format": "prettier --write --ignore-path .gitignore"
   },
   "dependencies": {
+    "@brettspiel/api-client": "0.1.0",
+    "@brettspiel/domain-types": "0.1.0",
+    "@brettspiel/games": "0.1.0",
+    "@brettspiel/io-types": "0.1.0",
+    "@brettspiel/typed-socket": "0.1.0",
     "@reduxjs/toolkit": "^1.3.6",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -22,11 +27,6 @@
     "@types/react-redux": "^7.1.9",
     "@types/react-router": "^5.1.7",
     "@types/socket.io-client": "^1.4.33",
-    "@brettspiel/domain-types": "0.1.0",
-    "@brettspiel/io-types": "0.1.0",
-    "@brettspiel/typed-socket": "0.1.0",
-    "@brettspiel/games": "0.1.0",
-    "@brettspiel/api-client": "0.1.0",
     "abort-controller": "^3.0.0",
     "classnames": "^2.2.6",
     "clipboardy": "^2.3.0",
