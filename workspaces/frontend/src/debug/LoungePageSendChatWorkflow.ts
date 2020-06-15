@@ -1,9 +1,8 @@
 import { DEBUG_MODE } from "../constants";
 import { store } from "../store";
-import { useSocket } from "../hooks/useSocket";
 
 export class LoungePageSendChatWorkflow {
-  constructor(private emit: ReturnType<typeof useSocket>["emit"]) {}
+  constructor(private emit: any) {}
 
   run = async () => {
     if (!DEBUG_MODE) return;

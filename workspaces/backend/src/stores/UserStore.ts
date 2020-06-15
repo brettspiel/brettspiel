@@ -16,6 +16,9 @@ export class UserStore {
 
   get = (id: string): UserData | undefined => this.store[id];
 
+  getBySecretToken = (secretToken: string): UserData | undefined =>
+    Object.values(this.store).find((ud) => ud.secretToken === secretToken);
+
   insert = (name: string): UserData => {
     const user: User = {
       id: v4(),

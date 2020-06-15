@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import {
   Button,
@@ -10,62 +10,22 @@ import {
   Item,
   Segment,
 } from "semantic-ui-react";
-import { useSocket } from "../../hooks/useSocket";
 import { useReduxState } from "../../hooks/useReduxState";
-import { useDispatch } from "react-redux";
-import { addLog } from "../../modules/loungeChatLog";
-import { LoungePageSendChatWorkflow } from "../../debug/LoungePageSendChatWorkflow";
 import { useLoggedIn } from "../LoggedInRoute";
-import { ChatLog } from "@brettspiel/domain-types/lib/ChatLog";
 import { games } from "@brettspiel/games/lib/games";
-import { GameRoom, GameType } from "@brettspiel/domain-types/lib/GameRoom";
+import { useSocket } from "../../hooks/useSocket";
+import { ReadyState } from "react-use-websocket/dist";
 
 export const LoungePage: React.FunctionComponent = () => {
-  const { self, serverAddress, secretToken } = useLoggedIn();
-  const dispatch = useDispatch();
+  const { self } = useLoggedIn();
   const chatLogs = useReduxState((state) => state.loungeChatLog.logs);
   const [chatMessage, setChatMessage] = useState("");
-  const {
-    connect,
-    disconnect,
-    request,
-    emit,
-    subscribe,
-    unsubscribe,
-  } = useSocket(serverAddress, "/lounge", { userId: self.id, secretToken });
+  const { sendMessage, readyState } = useSocket("/echo");
   useEffect(() => {
-    new LoungePageSendChatWorkflow(emit).run();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const chatLogSubscriber = useCallback(
-    (chatLog: ChatLog) => {
-      dispatch(addLog(chatLog));
-    },
-    [dispatch]
-  );
-  useEffect(() => {
-    connect();
-    return () => disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    subscribe("server/lounge/chatLog", chatLogSubscriber);
-    return () => unsubscribe("server/lounge/chatLog", chatLogSubscriber);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const [gameRooms, setGameRooms] = useState<GameRoom[]>([]);
-  useEffect(() => {
-    subscribe("server/lounge/roomStatusChange", setGameRooms);
-    return () => unsubscribe("server/lounge/roomStatusChange", setGameRooms);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    request("request/lounge/rooms", null).then((rooms) => {
-      if (rooms) setGameRooms(rooms);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (readyState === ReadyState.OPEN) {
+      sendMessage("hello!!!!!!!");
+    }
+  }, [readyState, sendMessage]);
 
   return (
     <Container className={styles.lounge}>
@@ -79,9 +39,9 @@ export const LoungePage: React.FunctionComponent = () => {
                 <Card.Meta>{game.categories.join("/")}</Card.Meta>
 
                 <Item.Group divided>
-                  {gameRooms
-                    .filter((room) => room.type === type)
-                    .map((room) => (
+                  {[]
+                    .filter((room: any) => room.type === type)
+                    .map((room: any) => (
                       <Item
                         key={room.id}
                       >{`${room.host.name} is wanting player of ${room.type}`}</Item>
@@ -89,16 +49,7 @@ export const LoungePage: React.FunctionComponent = () => {
                 </Item.Group>
               </Card.Content>
               <Card.Content extra>
-                <Button
-                  basic
-                  color="green"
-                  onClick={() => {
-                    emit(
-                      "client/lounge/openRoom",
-                      GameType.decode(type).unsafeCoerce()
-                    );
-                  }}
-                >
+                <Button basic color="green" onClick={() => {}}>
                   このゲームで遊ぶ
                 </Button>
               </Card.Content>
@@ -136,10 +87,6 @@ export const LoungePage: React.FunctionComponent = () => {
       <Button
         onClick={() => {
           if (self) {
-            emit("client/lounge/chatSend", {
-              user: self,
-              message: chatMessage,
-            });
             setChatMessage("");
           }
         }}
