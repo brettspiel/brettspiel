@@ -20,9 +20,9 @@ export const withSocketBroadcaster: WebsocketRequestHandler = (
     sockets.delete(req.user.id);
   });
 
-  req.broadcast = (data: SocketMessage) => {
+  req.broadcast = (data: unknown) => {
     for (const socket of sockets.values()) {
-      socket.send(JSON.stringify(data));
+      socket.send(data);
     }
   };
   next();
