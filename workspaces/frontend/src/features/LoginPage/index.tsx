@@ -1,19 +1,18 @@
-import React, { useCallback, useEffect, useState } from "react";
-import styles from "./styles.module.css";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { paths } from "../../paths";
-import { LoginPageToLoungePageWorkflow } from "../../debug/LoginPageToLoungePageWorkflow";
-import { Button, Form, Image } from "semantic-ui-react";
 import { healthcheck } from "../../api/healthcheck";
 import { registerAddress } from "../../modules/server";
 import { createUser } from "../../modules/user";
+import { Button, Container, Form, Image } from "react-bootstrap";
+import { css } from "@emotion/core";
 
 export const LoginPage: React.FunctionComponent = () => {
-  useEffect(() => {
-    new LoginPageToLoungePageWorkflow().run();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   new LoginPageToLoungePageWorkflow().run();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -31,32 +30,52 @@ export const LoginPage: React.FunctionComponent = () => {
   }, [dispatch, history, serverAddress, userName]);
 
   return (
-    <div className={styles.container}>
-      <Image src="/logo.png" alt="brettspiel logo" size="small" />
-      <div className={styles.box}>
-        <Form onSubmit={handleSubmit}>
-          <Form.Field>
-            <label>サーバーアドレス</label>
-            <input
-              type="text"
-              placeholder="https://xxxxxxx.ngrok.io"
-              value={serverAddress}
-              onChange={(event) => setServerAddress(event.target.value)}
-            />
-          </Form.Field>
-          <Form.Field>
-            <label>ユーザー名</label>
-            <input
-              value={userName}
-              onChange={(event) => setUserName(event.target.value)}
-            />
-          </Form.Field>
+    <Container css={styles.Container}>
+      <Image
+        css={styles.Image}
+        roundedCircle
+        src="/logo.png"
+        alt="brettspiel logo"
+      />
+      <Form css={styles.Form} onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>サーバーアドレス</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="https://xxxxxxx.ngrok.io"
+            value={serverAddress}
+            onChange={(event) => setServerAddress(event.target.value)}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>ユーザー名</Form.Label>
+          <Form.Control
+            value={userName}
+            onChange={(event) => setUserName(event.target.value)}
+          />
+        </Form.Group>
 
-          <Button fluid type="submit">
-            ログイン
-          </Button>
-        </Form>
-      </div>
-    </div>
+        <Button block type="submit">
+          ログイン
+        </Button>
+      </Form>
+    </Container>
   );
+};
+
+const styles = {
+  Container: css({
+    width: "30rem",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  }),
+  Image: css({
+    height: "auto",
+    width: "60%",
+  }),
+  Form: css({
+    width: "100%",
+  }),
 };
