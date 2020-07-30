@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { paths } from "../../paths";
-import { healthcheck } from "../../api/healthcheck";
-import { registerAddress } from "../../modules/server";
-import { createUser } from "../../modules/user";
+import { paths } from "../paths";
+import { healthcheck } from "../api/healthcheck";
+import { registerAddress } from "../modules/server";
+import { createUser } from "../modules/user";
 import { Button, Container, Form, Image } from "react-bootstrap";
 import { css } from "@emotion/core";
 
