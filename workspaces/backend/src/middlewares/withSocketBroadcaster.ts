@@ -1,6 +1,5 @@
 import { WebsocketRequestHandler } from "express-ws";
 import WebSocket from "ws";
-import { SocketMessage } from "@brettspiel/io-types/lib/socket/SocketMessage";
 
 let sockets = new Map<string, WebSocket>();
 

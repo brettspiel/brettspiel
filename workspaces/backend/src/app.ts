@@ -5,10 +5,8 @@ import { usersRoute } from "./controllers/users";
 import ExpressWs from "express-ws";
 import { withSocketAuth } from "./middlewares/withSocketAuth";
 import { User } from "@brettspiel/domain-types/lib/User";
-import { SocketMessage } from "@brettspiel/io-types/lib/socket/SocketMessage";
 import { withSocketBroadcaster } from "./middlewares/withSocketBroadcaster";
-import { ChatLogSendRequest } from "@brettspiel/io-types/lib/socket/ChatLogSendRequest";
-import { loungeChatStore } from "./stores/ChatStore";
+import { loungeSocket } from "./controllers/loungeSocket";
 
 declare global {
   export namespace Express {
@@ -27,25 +25,4 @@ app.use(cors());
 app.use("/__healthcheck", healthcheckRoute);
 app.use("/users", usersRoute);
 
-app.ws("/lounge/chat", withSocketAuth, withSocketBroadcaster, (ws, req) => {
-  ws.on("message", (rawData) => {
-    const decoded = SocketMessage.decode(rawData);
-    if (decoded.isLeft()) return;
-    const { type, payload } = decoded.unsafeCoerce();
-
-    if (type === "ChatLogSend") {
-      ChatLogSendRequest.decode(payload)
-        .map(({ user, message }) => loungeChatStore.insert(user, message))
-        .either(
-          () => {},
-          (chatLog) =>
-            req.broadcast(
-              SocketMessage.encode({
-                type: "/lounge/chat/AddMessage",
-                payload: chatLog,
-              })
-            )
-        );
-    }
-  });
-});
+app.ws("/lounge/chat", withSocketAuth, withSocketBroadcaster, loungeSocket);

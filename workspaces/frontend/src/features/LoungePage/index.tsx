@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import {
   Button,
@@ -17,12 +17,17 @@ import { useSocket } from "../../hooks/useSocket";
 import { ReadyState } from "react-use-websocket/dist";
 import { SocketMessage } from "@brettspiel/io-types/lib/socket/SocketMessage";
 import { ChatLogSendRequest } from "@brettspiel/io-types/lib/socket/ChatLogSendRequest";
+import { useDispatch } from "react-redux";
+import { addLog } from "../../modules/loungeChatLog";
 
 export const LoungePage: React.FunctionComponent = () => {
+  const dispatch = useDispatch();
   const { self } = useLoggedIn();
   const chatLogs = useReduxState((state) => state.loungeChatLog.logs);
   const [chatMessage, setChatMessage] = useState("");
-  const { sendMessage, readyState } = useSocket("/lounge/chat");
+  const { sendMessage, readyState, lastJsonMessage } = useSocket(
+    "/lounge/chat"
+  );
   const sendChatLog = useCallback(
     (message: string) => {
       if (readyState === ReadyState.OPEN) {
@@ -39,6 +44,11 @@ export const LoungePage: React.FunctionComponent = () => {
     },
     [readyState, self, sendMessage]
   );
+  useEffect(() => {
+    if (lastJsonMessage?.payload) {
+      dispatch(addLog(lastJsonMessage.payload as any));
+    }
+  }, [dispatch, lastJsonMessage]);
 
   return (
     <Container className={styles.lounge}>
