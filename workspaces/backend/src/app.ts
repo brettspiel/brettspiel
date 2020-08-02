@@ -7,6 +7,8 @@ import { withSocketAuth } from "./middlewares/withSocketAuth";
 import { User } from "@brettspiel/domain-types/lib/User";
 import { withSocketBroadcaster } from "./middlewares/withSocketBroadcaster";
 import { loungeSocket } from "./controllers/loungeSocket";
+import { ticTacToe } from "./controllers/gameSocket/ticTacToe";
+import { gamesRoute } from "./controllers/gamesRoute";
 
 declare global {
   export namespace Express {
@@ -24,5 +26,7 @@ app.use(cors());
 
 app.use("/__healthcheck", healthcheckRoute);
 app.use("/users", usersRoute);
+app.use("/games/:gameType", gamesRoute);
 
-app.ws("/lounge/chat", withSocketAuth, withSocketBroadcaster, loungeSocket);
+app.ws("/lounge/chat", withSocketAuth, withSocketBroadcaster(), loungeSocket);
+app.ws("/game/tic-tac-toe", withSocketAuth, withSocketBroadcaster(), ticTacToe);

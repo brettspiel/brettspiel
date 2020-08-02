@@ -19,11 +19,14 @@ import { SocketMessage } from "@brettspiel/io-types/lib/socket/SocketMessage";
 import { ChatLogSendRequest } from "@brettspiel/io-types/lib/socket/ChatLogSendRequest";
 import { useDispatch } from "react-redux";
 import { addLog } from "../../modules/loungeChatLog";
+import { GameApi } from "../../api/GameApi";
+import { useServerConnection } from "../../hooks/useServerConnection";
 
 export const LoungePage: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const { self } = useLoggedIn();
   const chatLogs = useReduxState((state) => state.loungeChatLog.logs);
+  const { serverAddress } = useServerConnection();
   const [chatMessage, setChatMessage] = useState("");
   const { sendMessage, readyState, lastJsonMessage } = useSocket(
     "/lounge/chat"
@@ -72,7 +75,13 @@ export const LoungePage: React.FunctionComponent = () => {
                 </Item.Group>
               </Card.Content>
               <Card.Content extra>
-                <Button basic color="green" onClick={() => {}}>
+                <Button
+                  basic
+                  color="green"
+                  onClick={() => {
+                    new GameApi(serverAddress!).createRoom("TicTacToe");
+                  }}
+                >
                   このゲームで遊ぶ
                 </Button>
               </Card.Content>
