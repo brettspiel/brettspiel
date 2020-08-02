@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { paths } from "../paths";
@@ -7,6 +7,7 @@ import { registerAddress } from "../modules/server";
 import { createUser } from "../modules/user";
 import { Button, Container, Form, Image } from "react-bootstrap";
 import { css } from "@emotion/core";
+import { useForm } from "react-hook-form";
 
 export const LoginPage: React.FunctionComponent = () => {
   // useEffect(() => {
@@ -16,18 +17,21 @@ export const LoginPage: React.FunctionComponent = () => {
 
   const dispatch = useDispatch();
   const history = useHistory();
+  const { register, handleSubmit, errors } = useForm<{
+    serverAddress: string;
+    userName: string;
+  }>();
 
-  const [serverAddress, setServerAddress] = useState("");
-  const [userName, setUserName] = useState("");
-
-  const handleSubmit = useCallback(async () => {
-    const ok = await healthcheck(serverAddress!);
+  console.log("@errors", errors);
+  const onSubmitProps = handleSubmit(async (data) => {
+    console.log("@data", data);
+    const ok = await healthcheck(data.serverAddress!);
     if (ok) {
-      dispatch(registerAddress(serverAddress));
-      await dispatch(createUser(userName));
+      dispatch(registerAddress(data.serverAddress));
+      await dispatch(createUser(data.userName));
       history.push(paths["/"].routingPath);
     }
-  }, [dispatch, history, serverAddress, userName]);
+  });
 
   return (
     <Container css={styles.Container}>
@@ -37,22 +41,19 @@ export const LoginPage: React.FunctionComponent = () => {
         src="/logo.png"
         alt="brettspiel logo"
       />
-      <Form css={styles.Form} onSubmit={handleSubmit}>
+      <Form css={styles.Form} onSubmit={onSubmitProps}>
         <Form.Group>
           <Form.Label>サーバーアドレス</Form.Label>
           <Form.Control
+            ref={register({ pattern: /^https:\/\/.*\.ngrok\.io$/ })}
             type="text"
+            name="serverAddress"
             placeholder="https://xxxxxxx.ngrok.io"
-            value={serverAddress}
-            onChange={(event) => setServerAddress(event.target.value)}
           />
         </Form.Group>
         <Form.Group>
           <Form.Label>ユーザー名</Form.Label>
-          <Form.Control
-            value={userName}
-            onChange={(event) => setUserName(event.target.value)}
-          />
+          <Form.Control ref={register({ required: true })} name="userName" />
         </Form.Group>
 
         <Button block type="submit">
