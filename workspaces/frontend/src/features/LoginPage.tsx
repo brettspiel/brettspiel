@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback, useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { paths } from "../paths";
@@ -7,7 +7,8 @@ import { registerAddress } from "../modules/server";
 import { createUser } from "../modules/user";
 import { Button, Container, Form, Image } from "react-bootstrap";
 import { css } from "@emotion/core";
-import { useForm } from "react-hook-form";
+import { FieldError, useForm } from "react-hook-form";
+import { DeepMap } from "react-hook-form/dist/types/utils";
 
 export const LoginPage: React.FunctionComponent = () => {
   // useEffect(() => {
@@ -22,9 +23,7 @@ export const LoginPage: React.FunctionComponent = () => {
     userName: string;
   }>();
 
-  console.log("@errors", errors);
   const onSubmitProps = handleSubmit(async (data) => {
-    console.log("@data", data);
     const ok = await healthcheck(data.serverAddress!);
     if (ok) {
       dispatch(registerAddress(data.serverAddress));
@@ -45,15 +44,24 @@ export const LoginPage: React.FunctionComponent = () => {
         <Form.Group>
           <Form.Label>サーバーアドレス</Form.Label>
           <Form.Control
-            ref={register({ pattern: /^https:\/\/.*\.ngrok\.io$/ })}
+            ref={register({
+              validate: {
+                urlForm: (value) =>
+                  value.startsWith("https://") && value.endsWith(".ngrok.io"),
+                connectivity: async (value) =>
+                  await healthcheck(value).catch(() => false),
+              },
+            })}
             type="text"
             name="serverAddress"
             placeholder="https://xxxxxxx.ngrok.io"
           />
+          <ErrorMessages errors={errors} name="serverAddress" />
         </Form.Group>
         <Form.Group>
           <Form.Label>ユーザー名</Form.Label>
           <Form.Control ref={register({ required: true })} name="userName" />
+          <ErrorMessages errors={errors} name="userName" />
         </Form.Group>
 
         <Button block type="submit">
@@ -62,6 +70,13 @@ export const LoginPage: React.FunctionComponent = () => {
       </Form>
     </Container>
   );
+};
+
+const ErrorMessages: React.FunctionComponent<{
+  errors: DeepMap<{ serverAddress: string; userName: string }, FieldError>;
+  name: "serverAddress" | "userName";
+}> = ({ errors, name }) => {
+  return <div>{errors[name]?.type}</div>;
 };
 
 const styles = {
