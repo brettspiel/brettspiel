@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { paths } from "../paths";
@@ -9,19 +9,20 @@ import { Button, Container, Form, Image } from "react-bootstrap";
 import { css } from "@emotion/core";
 import { FieldError, useForm } from "react-hook-form";
 import { DeepMap } from "react-hook-form/dist/types/utils";
+import { LoginPageToLoungePageWorkflow } from "../debug/LoginPageToLoungePageWorkflow";
 
 export const LoginPage: React.FunctionComponent = () => {
-  // useEffect(() => {
-  //   new LoginPageToLoungePageWorkflow().run();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    new LoginPageToLoungePageWorkflow().run();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const dispatch = useDispatch();
   const history = useHistory();
   const { register, handleSubmit, errors } = useForm<{
     serverAddress: string;
     userName: string;
-  }>();
+  }>({ mode: "onBlur", reValidateMode: "onBlur" });
 
   const onSubmitProps = handleSubmit(async (data) => {
     const ok = await healthcheck(data.serverAddress!);
@@ -55,12 +56,17 @@ export const LoginPage: React.FunctionComponent = () => {
             type="text"
             name="serverAddress"
             placeholder="https://xxxxxxx.ngrok.io"
+            isInvalid={!!errors.serverAddress}
           />
           <ErrorMessages errors={errors} name="serverAddress" />
         </Form.Group>
         <Form.Group>
           <Form.Label>ユーザー名</Form.Label>
-          <Form.Control ref={register({ required: true })} name="userName" />
+          <Form.Control
+            ref={register({ required: true })}
+            name="userName"
+            isInvalid={!!errors.userName}
+          />
           <ErrorMessages errors={errors} name="userName" />
         </Form.Group>
 
@@ -76,7 +82,20 @@ const ErrorMessages: React.FunctionComponent<{
   errors: DeepMap<{ serverAddress: string; userName: string }, FieldError>;
   name: "serverAddress" | "userName";
 }> = ({ errors, name }) => {
-  return <div>{errors[name]?.type}</div>;
+  const message = useMemo(() => {
+    switch (errors[name]?.type) {
+      case "required":
+        return "必須です";
+      case "urlForm":
+        return "URL形式で入力してください";
+      case "connectivity":
+        return "サーバーへ接続できませんでした";
+    }
+    return "不正な入力値です";
+  }, [errors, name]);
+  return (
+    <Form.Control.Feedback type="invalid">{message}</Form.Control.Feedback>
+  );
 };
 
 const styles = {
