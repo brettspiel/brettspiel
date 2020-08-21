@@ -9,6 +9,7 @@
     "format": "prettier --write --ignore-path .gitignore"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.2.2",
     "@brettspiel/api-client": "0.1.0",
     "@brettspiel/domain-types": "0.1.0",
     "@brettspiel/games": "0.1.0",
@@ -30,6 +31,7 @@
     "@types/react-router": "^5.1.7",
     "@types/socket.io-client": "^1.4.33",
     "abort-controller": "^3.0.0",
+    "antd": "^4.5.4",
     "classnames": "^2.2.6",
     "clipboardy": "^2.3.0",
     "customize-cra": "^1.0.0",
