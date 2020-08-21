@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import { App } from "./features/App";
 import * as serviceWorker from "./serviceWorker";
-import "semantic-ui-css/semantic.min.css";
+import "antd/dist/antd.css";
 import { DEBUG_MODE } from "./constants";
 
 console.log("@DEBUG_MODE", JSON.parse(JSON.stringify(DEBUG_MODE)));
