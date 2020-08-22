@@ -13,10 +13,12 @@ import { useServerConnection } from "../../hooks/useServerConnection";
 import {
   Button,
   Card,
+  Col,
   Comment,
   Divider,
   Input,
   List,
+  Row,
   Space,
   Typography,
 } from "antd";
@@ -54,12 +56,11 @@ export const LoungePage: React.FunctionComponent = () => {
 
   return (
     <Space size="large" direction="vertical">
-      <Space direction="vertical">
-        <Typography.Title level={2}>ゲームを始める</Typography.Title>
-        <Space direction="horizontal">
-          {Object.entries(games).map(([type, game]) => (
+      <Typography.Title level={2}>ゲームを始める</Typography.Title>
+      <Row gutter={16}>
+        {Object.entries(games).map(([type, game]) => (
+          <Col key={type} span={6}>
             <Card
-              key={type}
               actions={[
                 <Button
                   type="primary"
@@ -85,9 +86,9 @@ export const LoungePage: React.FunctionComponent = () => {
                 )}
               />
             </Card>
-          ))}
-        </Space>
-      </Space>
+          </Col>
+        ))}
+      </Row>
 
       <Divider />
 
