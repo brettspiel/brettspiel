@@ -1,40 +1,55 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { healthcheck } from "../api/healthcheck";
 import { css } from "@emotion/core";
-import { LoginPageToLoungePageWorkflow } from "../debug/LoginPageToLoungePageWorkflow";
-import { Button, Form, Input, Space } from "antd";
+import { Button, Checkbox, Form, Input, Space } from "antd";
 import { createUser } from "../modules/user";
 import { paths } from "../paths";
 import { registerAddress } from "../modules/server";
+import { CloudServerOutlined, UserOutlined } from "@ant-design/icons";
+import { useLocalStorageState } from "ahooks";
 
 export const LoginPage: React.FunctionComponent = () => {
-  const workflowRef = useRef(new LoginPageToLoungePageWorkflow());
-  useEffect(() => {
-    workflowRef.current.run();
-  }, []);
-
   const dispatch = useDispatch();
   const history = useHistory();
+  const [savedServerAddress, setSavedServerAddress] = useLocalStorageState(
+    "savedServerAddress",
+    ""
+  );
+  const [savedUserName, setSavedUserName] = useLocalStorageState(
+    "savedUserName",
+    ""
+  );
 
   return (
     <Space size="large" css={styles.Container}>
       <Space direction="vertical" size="small">
         <img css={styles.Image} src="/logo.png" alt="brettspiel logo" />
         <Form
+          initialValues={{
+            serverAddress: savedServerAddress,
+            userName: savedUserName,
+            remember: savedServerAddress !== "" || savedUserName !== "",
+          }}
           css={styles.Form}
-          onFinish={async ({ serverAddress, userName }) => {
+          onFinish={async ({ serverAddress, userName, remember }) => {
             const ok = await healthcheck(serverAddress!);
             if (ok) {
               dispatch(registerAddress(serverAddress));
               await dispatch(createUser(userName));
+              if (remember) {
+                setSavedServerAddress(serverAddress);
+                setSavedUserName(userName);
+              } else {
+                setSavedServerAddress("");
+                setSavedUserName("");
+              }
               history.push(paths["/"].routingPath);
             }
           }}
         >
           <Form.Item
-            label="サーバーアドレス"
             name="serverAddress"
             hasFeedback
             rules={[
@@ -54,20 +69,32 @@ export const LoginPage: React.FunctionComponent = () => {
               },
             ]}
           >
-            <Input type="text" placeholder="https://xxxxxxx.ngrok.io" />
+            <Input
+              type="text"
+              prefix={<CloudServerOutlined />}
+              placeholder="https://xxxxxxx.ngrok.io"
+            />
           </Form.Item>
           <Form.Item
-            label="ユーザー名"
             name="userName"
             hasFeedback
             rules={[{ required: true, message: "必須です" }]}
           >
-            <Input />
+            <Input
+              type="text"
+              prefix={<UserOutlined />}
+              placeholder="ユーザー名"
+            />
+          </Form.Item>
+          <Form.Item name="remember" valuePropName="checked" noStyle>
+            <Checkbox>ログイン情報を記憶する</Checkbox>
           </Form.Item>
 
-          <Button block htmlType="submit" type="primary">
-            ログイン
-          </Button>
+          <Form.Item>
+            <Button block htmlType="submit" type="primary">
+              ログイン
+            </Button>
+          </Form.Item>
         </Form>
       </Space>
     </Space>

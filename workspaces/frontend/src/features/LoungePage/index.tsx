@@ -100,10 +100,7 @@ export const LoungePage: React.FunctionComponent = () => {
             author={chatLog.user.name}
             content={chatLog.message}
             datetime={
-              <span>
-                {new Date(chatLog.timestamp).toLocaleDateString()} -{" "}
-                {new Date(chatLog.timestamp).toLocaleTimeString()}
-              </span>
+              <span>{new Date(chatLog.timestamp).toLocaleTimeString()}</span>
             }
           />
         ))}
