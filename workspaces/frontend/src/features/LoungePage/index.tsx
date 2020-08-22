@@ -1,15 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import styles from "./styles.module.css";
-import {
-  Button,
-  Card,
-  Comment,
-  Container,
-  Header,
-  Input,
-  Item,
-  Segment,
-} from "semantic-ui-react";
 import { useReduxState } from "../../hooks/useReduxState";
 import { useLoggedIn } from "../LoggedInRoute";
 import { games } from "@brettspiel/games/lib/games";
@@ -21,6 +10,16 @@ import { useDispatch } from "react-redux";
 import { addLog } from "../../modules/loungeChatLog";
 import { GameApi } from "../../api/GameApi";
 import { useServerConnection } from "../../hooks/useServerConnection";
+import {
+  Button,
+  Card,
+  Comment,
+  Divider,
+  Input,
+  List,
+  Space,
+  Typography,
+} from "antd";
 
 export const LoungePage: React.FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -54,78 +53,77 @@ export const LoungePage: React.FunctionComponent = () => {
   }, [dispatch, lastJsonMessage]);
 
   return (
-    <Container className={styles.lounge}>
-      <Segment>
-        <Header as="h3">ゲームを始める</Header>
-        <Card.Group>
+    <Space size="large" direction="vertical">
+      <Space direction="vertical">
+        <Typography.Title level={2}>ゲームを始める</Typography.Title>
+        <Space direction="horizontal">
           {Object.entries(games).map(([type, game]) => (
-            <Card key={type}>
-              <Card.Content>
-                <Card.Header>{game.name}</Card.Header>
-                <Card.Meta>{game.categories.join("/")}</Card.Meta>
-
-                <Item.Group divided>
-                  {[]
-                    .filter((room: any) => room.type === type)
-                    .map((room: any) => (
-                      <Item
-                        key={room.id}
-                      >{`${room.host.name} is wanting player of ${room.type}`}</Item>
-                    ))}
-                </Item.Group>
-              </Card.Content>
-              <Card.Content extra>
+            <Card
+              key={type}
+              actions={[
                 <Button
-                  basic
-                  color="green"
+                  type="primary"
                   onClick={() => {
                     new GameApi(serverAddress!).createRoom("TicTacToe");
                   }}
                 >
                   このゲームで遊ぶ
-                </Button>
-              </Card.Content>
+                </Button>,
+              ]}
+            >
+              <Card.Meta
+                title={game.name}
+                description={game.categories.join("/")}
+              />
+              <List
+                bordered
+                dataSource={[].filter((room: any) => room.type === type)}
+                renderItem={(room: any) => (
+                  <List.Item
+                    key={room.id}
+                  >{`${room.host.name} is wanting player of ${room.type}`}</List.Item>
+                )}
+              />
             </Card>
           ))}
-        </Card.Group>
-      </Segment>
+        </Space>
+      </Space>
 
-      <Comment.Group>
-        <Header as="h3" dividing>
-          チャット
-        </Header>
+      <Divider />
+
+      <Space direction="vertical">
+        <Typography.Title level={3}>チャット</Typography.Title>
 
         {chatLogs.map((chatLog) => (
-          <Comment key={`${chatLog.timestamp}_${chatLog.user.id}`}>
-            <Comment.Content>
-              <Comment.Author as="span">{chatLog.user.name}</Comment.Author>
-              <Comment.Metadata>
-                <span>
-                  {new Date(chatLog.timestamp).toLocaleDateString()} -{" "}
-                  {new Date(chatLog.timestamp).toLocaleTimeString()}
-                </span>
-              </Comment.Metadata>
-              <Comment.Text>{chatLog.message}</Comment.Text>
-            </Comment.Content>
-          </Comment>
+          <Comment
+            key={`${chatLog.timestamp}_${chatLog.user.id}`}
+            author={chatLog.user.name}
+            content={chatLog.message}
+            datetime={
+              <span>
+                {new Date(chatLog.timestamp).toLocaleDateString()} -{" "}
+                {new Date(chatLog.timestamp).toLocaleTimeString()}
+              </span>
+            }
+          />
         ))}
-      </Comment.Group>
 
-      <Input
-        placeholder="チャット"
-        value={chatMessage}
-        onChange={(event) => setChatMessage(event.target.value)}
-      />
-      <Button
-        onClick={() => {
-          if (self) {
-            setChatMessage("");
-            sendChatLog(chatMessage);
-          }
-        }}
-      >
-        送信
-      </Button>
-    </Container>
+        <Input
+          placeholder="チャット"
+          value={chatMessage}
+          onChange={(event) => setChatMessage(event.target.value)}
+        />
+        <Button
+          onClick={() => {
+            if (self) {
+              setChatMessage("");
+              sendChatLog(chatMessage);
+            }
+          }}
+        >
+          送信
+        </Button>
+      </Space>
+    </Space>
   );
 };
