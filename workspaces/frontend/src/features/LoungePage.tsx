@@ -30,12 +30,16 @@ export const LoungePage: React.FunctionComponent = () => {
   const { self } = useLoggedIn();
   const chatLogs = useReduxState((state) => state.loungeChatLog.logs);
   const { serverAddress } = useServerConnection();
-  const [chatMessage, setChatMessage] = useState("");
   const { sendMessage, readyState, lastJsonMessage } = useSocket(
     "/lounge/chat"
   );
-  const sendChatLog = useCallback(
-    (message: string) => {
+  useEffect(() => {
+    if (lastJsonMessage?.payload) {
+      dispatch(addLog(lastJsonMessage.payload as any));
+    }
+  }, [dispatch, lastJsonMessage]);
+  const handleFinish = useCallback(
+    ({ message }: Record<string, string>) => {
       if (readyState === ReadyState.OPEN) {
         sendMessage(
           SocketMessage.encode({
@@ -50,11 +54,6 @@ export const LoungePage: React.FunctionComponent = () => {
     },
     [readyState, self, sendMessage]
   );
-  useEffect(() => {
-    if (lastJsonMessage?.payload) {
-      dispatch(addLog(lastJsonMessage.payload as any));
-    }
-  }, [dispatch, lastJsonMessage]);
 
   return (
     <Space size="large" direction="vertical">
@@ -108,8 +107,14 @@ export const LoungePage: React.FunctionComponent = () => {
           />
         ))}
 
-        <Form layout="inline">
-          <Form.Item name="message" css={styles.ChatInput}>
+        <Form layout="inline" onFinish={handleFinish}>
+          <Form.Item
+            name="message"
+            css={styles.ChatInput}
+            rules={[{ required: true }]}
+            validateStatus={"success"}
+            help={false}
+          >
             <Input placeholder="チャット" />
           </Form.Item>
           <Form.Item css={styles.ChatSent}>
