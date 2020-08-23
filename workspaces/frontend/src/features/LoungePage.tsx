@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useReduxState } from "../../hooks/useReduxState";
-import { useLoggedIn } from "../LoggedInRoute";
+import { useReduxState } from "../hooks/useReduxState";
+import { useLoggedIn } from "./LoggedInRoute";
 import { games } from "@brettspiel/games/lib/games";
-import { useSocket } from "../../hooks/useSocket";
+import { useSocket } from "../hooks/useSocket";
 import { ReadyState } from "react-use-websocket/dist";
 import { SocketMessage } from "@brettspiel/io-types/lib/socket/SocketMessage";
 import { ChatLogSendRequest } from "@brettspiel/io-types/lib/socket/ChatLogSendRequest";
 import { useDispatch } from "react-redux";
-import { addLog } from "../../modules/loungeChatLog";
-import { GameApi } from "../../api/GameApi";
-import { useServerConnection } from "../../hooks/useServerConnection";
+import { addLog } from "../modules/loungeChatLog";
+import { GameApi } from "../api/GameApi";
+import { useServerConnection } from "../hooks/useServerConnection";
 import {
   Button,
   Card,

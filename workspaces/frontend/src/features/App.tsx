@@ -1,12 +1,12 @@
 import React from "react";
 import { Redirect, Route, Router, Switch } from "react-router";
-import { paths } from "../../paths";
-import { LoginPage } from "../LoginPage";
-import { LoungePage } from "../LoungePage";
+import { paths } from "../paths";
+import { LoginPage } from "./LoginPage";
+import { LoungePage } from "./LoungePage";
 import { Provider } from "react-redux";
-import { store } from "../../store";
-import { history } from "../../history";
-import { LoggedInRoute } from "../LoggedInRoute";
+import { store } from "../store";
+import { history } from "../history";
+import { LoggedInRoute } from "./LoggedInRoute";
 import { css } from "@emotion/core";
 
 export const App: React.FunctionComponent = () => (
