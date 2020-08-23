@@ -5,14 +5,14 @@ import { LoginPage } from "../LoginPage";
 import { LoungePage } from "../LoungePage";
 import { Provider } from "react-redux";
 import { store } from "../../store";
-import styles from "./styles.module.css";
 import { history } from "../../history";
 import { LoggedInRoute } from "../LoggedInRoute";
+import { css } from "@emotion/core";
 
 export const App: React.FunctionComponent = () => (
   <Provider store={store}>
     <Router history={history}>
-      <div className={styles.app}>
+      <div css={styles.app}>
         <Switch>
           <LoggedInRoute
             path={paths["/"].routingPath}
@@ -30,3 +30,14 @@ export const App: React.FunctionComponent = () => (
     </Router>
   </Provider>
 );
+
+const styles = {
+  app: css({
+    width: "100vw",
+    height: "100vh",
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column",
+    color: "#202020",
+  }),
+};
