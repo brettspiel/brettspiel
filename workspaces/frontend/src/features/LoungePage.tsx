@@ -16,12 +16,14 @@ import {
   Col,
   Comment,
   Divider,
+  Form,
   Input,
   List,
   Row,
   Space,
   Typography,
 } from "antd";
+import { css, CSSObject, InterpolationWithTheme } from "@emotion/core";
 
 export const LoungePage: React.FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -92,7 +94,7 @@ export const LoungePage: React.FunctionComponent = () => {
 
       <Divider />
 
-      <Space direction="vertical">
+      <Space direction="vertical" css={styles.ChatForm}>
         <Typography.Title level={3}>チャット</Typography.Title>
 
         {chatLogs.map((chatLog) => (
@@ -106,22 +108,31 @@ export const LoungePage: React.FunctionComponent = () => {
           />
         ))}
 
-        <Input
-          placeholder="チャット"
-          value={chatMessage}
-          onChange={(event) => setChatMessage(event.target.value)}
-        />
-        <Button
-          onClick={() => {
-            if (self) {
-              setChatMessage("");
-              sendChatLog(chatMessage);
-            }
-          }}
-        >
-          送信
-        </Button>
+        <Form layout="inline">
+          <Form.Item name="message" css={styles.ChatInput}>
+            <Input placeholder="チャット" />
+          </Form.Item>
+          <Form.Item css={styles.ChatSent}>
+            <Button htmlType="submit">送信</Button>
+          </Form.Item>
+        </Form>
       </Space>
     </Space>
   );
+};
+
+const styles: Record<string, InterpolationWithTheme<any>> = {
+  ChatForm: {
+    width: "100%",
+  },
+  ChatInput: {
+    "&.ant-form-item": {
+      flexGrow: 1,
+    },
+  },
+  ChatSent: {
+    "&.ant-form-item": {
+      marginRight: "0",
+    },
+  },
 };
