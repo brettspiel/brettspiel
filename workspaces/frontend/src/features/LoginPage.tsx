@@ -73,6 +73,7 @@ export const LoginPage: React.FunctionComponent = () => {
               type="text"
               prefix={<CloudServerOutlined />}
               placeholder="https://xxxxxxx.ngrok.io"
+              onFocus={(event) => event.target.select()}
             />
           </Form.Item>
           <Form.Item
