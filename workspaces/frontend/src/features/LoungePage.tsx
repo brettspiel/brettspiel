@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useReduxState } from "../hooks/useReduxState";
 import { useLoggedIn } from "./LoggedInRoute";
 import { games } from "@brettspiel/games/lib/games";
@@ -15,20 +15,20 @@ import {
   Card,
   Col,
   Comment,
-  Divider,
   Form,
   Input,
   List,
   Row,
-  Space,
   Typography,
 } from "antd";
-import { css, CSSObject, InterpolationWithTheme } from "@emotion/core";
+import { InterpolationWithTheme } from "@emotion/core";
+import { SplitPane } from "react-collapse-pane";
 
 export const LoungePage: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const { self } = useLoggedIn();
-  const chatLogs = useReduxState((state) => state.loungeChatLog.logs);
+  const chatLogsRaw = useReduxState((state) => state.loungeChatLog.logs);
+  const chatLogs = useMemo(() => chatLogsRaw.slice().reverse(), [chatLogsRaw]);
   const { serverAddress } = useServerConnection();
   const { sendMessage, readyState, lastJsonMessage } = useSocket(
     "/lounge/chat"
@@ -56,9 +56,9 @@ export const LoungePage: React.FunctionComponent = () => {
   );
 
   return (
-    <Space size="large" direction="vertical">
-      <Typography.Title level={2}>ゲームを始める</Typography.Title>
+    <SplitPane split="horizontal">
       <Row gutter={16}>
+        <Typography.Title level={2}>ゲームを始める</Typography.Title>
         {Object.entries(games).map(([type, game]) => (
           <Col key={type} span={6}>
             <Card
@@ -91,23 +91,23 @@ export const LoungePage: React.FunctionComponent = () => {
         ))}
       </Row>
 
-      <Divider />
-
-      <Space direction="vertical" css={styles.ChatForm}>
+      <div css={styles.ChatSection}>
         <Typography.Title level={3}>チャット</Typography.Title>
 
-        {chatLogs.map((chatLog) => (
-          <Comment
-            key={`${chatLog.timestamp}_${chatLog.user.id}`}
-            author={chatLog.user.name}
-            content={chatLog.message}
-            datetime={
-              <span>{new Date(chatLog.timestamp).toLocaleTimeString()}</span>
-            }
-          />
-        ))}
+        <div css={styles.ChatLog}>
+          {chatLogs.map((chatLog) => (
+            <Comment
+              key={`${chatLog.timestamp}_${chatLog.user.id}`}
+              author={chatLog.user.name}
+              content={chatLog.message}
+              datetime={
+                <span>{new Date(chatLog.timestamp).toLocaleTimeString()}</span>
+              }
+            />
+          ))}
+        </div>
 
-        <Form layout="inline" onFinish={handleFinish}>
+        <Form layout="inline" onFinish={handleFinish} css={styles.ChatForm}>
           <Form.Item
             name="message"
             css={styles.ChatInput}
@@ -121,14 +121,28 @@ export const LoungePage: React.FunctionComponent = () => {
             <Button htmlType="submit">送信</Button>
           </Form.Item>
         </Form>
-      </Space>
-    </Space>
+      </div>
+    </SplitPane>
   );
 };
 
 const styles: Record<string, InterpolationWithTheme<any>> = {
-  ChatForm: {
+  ChatSection: {
+    display: "flex",
+    flexDirection: "column",
     width: "100%",
+    height: "100%",
+  },
+  ChatLog: {
+    minHeight: 0,
+    flexShrink: 1,
+    overflowY: "scroll",
+    "& .ant-comment-inner": {
+      padding: "0 0 8px",
+    },
+  },
+  ChatForm: {
+    marginTop: "auto",
   },
   ChatInput: {
     "&.ant-form-item": {
